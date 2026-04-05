@@ -1,0 +1,370 @@
+
+========================================
+depth 0 name f argcount 0
+consts_types ['NoneType', 'int', 'tuple', 'str', 'Code310', 'str', 'bytes', 'tuple', 'Code310', 'bytes', 'int', 'bytes', 'Code310', 'bytes', 'bool', 'int', 'bytes', 'tuple', 'Code310', 'bytes', 'Code310', 'bytes', 'Code310']
+const 0 None
+const 1 0
+const 2 ('Image',)
+const 3 ''
+const 5 'meow.<locals>.<genexpr>'
+const 6 b'GOE]\x04YSF\\CO\x04LSC'
+const 7 ('server_hostname',)
+const 9 b'`hbz#~ta{dh#ktd'
+const 10 443
+const 11 b''
+const 13 b'\x04\x06\x17cl07"7* l1*70& \x1c "7$*1/m3-$c\x0b\x17\x17\x13lrmrNI\x0b,07yc.&,4m0:/5*&m%:*NI\x00,--& 7*,-yc /,0&NINI'
+const 14 True
+const 15 4096
+const 16 b'\x89PNG'
+const 17 ((139, 766), (136, 759), (177, 440), (95, 810), (154, 479), (136, 758), (179, 439), (95, 808), (158, 456), (136, 758), (191, 551), (99, 796), (159, 522), (136, 758), (152, 485), (155, 458), (99, 796), (95, 809), (136, 758), (95, 808), (159, 522), (136, 758), (179, 439), (95, 808), (158, 456), (191, 551), (136, 758), (155, 458), (95, 808), (159, 512), (95, 809), (136, 758), (179, 439), (95, 808), (158, 456), (136, 758), (159, 512), (155, 458), (95, 808), (158, 456), (190, 496), (153, 479), (136, 758), (195, 443), (99, 796), (156, 456), (94, 810), (136, 758), (153, 470), (94, 810), (152, 485), (152, 485), (161, 450), (191, 551), (136, 758), (153, 479), (94, 810), (154, 463), (154, 464), (159, 512), (95, 810), (158, 521), (159, 522), (97, 786), (233, 533))
+const 19 b'rmzph%?'
+const 21 b'yxbb'
+0000 LOAD_CONST               0
+0002 LOAD_CONST               None
+0004 IMPORT_NAME              socket
+0006 STORE_FAST               socket
+0008 LOAD_CONST               0
+0010 LOAD_CONST               None
+0012 IMPORT_NAME              ssl
+0014 STORE_FAST               ssl
+0016 LOAD_CONST               0
+0018 LOAD_CONST               ('Image',)
+0020 IMPORT_NAME              PIL
+0022 IMPORT_FROM              Image
+0024 STORE_FAST               Image
+0026 POP_TOP                  
+0028 LOAD_CONST               0
+0030 LOAD_CONST               None
+0032 IMPORT_NAME              io
+0034 STORE_FAST               io
+0036 LOAD_FAST                ssl
+0038 LOAD_METHOD              create_default_context
+0040 CALL_METHOD              0 positional arguments
+0042 LOAD_ATTR                wrap_socket
+0044 LOAD_FAST                socket
+0046 LOAD_METHOD              socket
+0048 LOAD_FAST                socket
+0050 LOAD_ATTR                AF_INET
+0052 LOAD_FAST                socket
+0054 LOAD_ATTR                SOCK_STREAM
+0056 CALL_METHOD              2 positional arguments
+0058 LOAD_CONST               ""
+0060 LOAD_METHOD              join
+0062 LOAD_CONST               <Code310 code object f at 0x7faa58ccc470, file <module>>, line 8
+0064 LOAD_CONST               "meow.<locals>.<genexpr>"
+0066 MAKE_FUNCTION            No arguments
+0068 LOAD_CONST               b'GOE]\x04YSF\\CO\x04LSC'
+0070 GET_ITER                 
+0072 CALL_FUNCTION            1 positional argument
+0074 CALL_METHOD              1 positional argument
+0076 LOAD_CONST               ('server_hostname',)
+0078 CALL_FUNCTION_KW         2 total positional and keyword args
+0080 STORE_FAST               _
+0082 LOAD_FAST                _
+0084 LOAD_METHOD              connect
+0086 LOAD_CONST               ""
+0088 LOAD_METHOD              join
+0090 LOAD_CONST               <Code310 code object f at 0x7faa58a31310, file <module>>, line 9
+0092 LOAD_CONST               "meow.<locals>.<genexpr>"
+0094 MAKE_FUNCTION            No arguments
+0096 LOAD_CONST               b'`hbz#~ta{dh#ktd'
+0098 GET_ITER                 
+0100 CALL_FUNCTION            1 positional argument
+0102 CALL_METHOD              1 positional argument
+0104 LOAD_CONST               443
+0106 BUILD_TUPLE              
+0108 CALL_METHOD              1 positional argument
+0110 POP_TOP                  
+0112 LOAD_FAST                _
+0114 LOAD_METHOD              sendall
+0116 LOAD_CONST               b''
+0118 LOAD_METHOD              join
+0120 LOAD_CONST               <Code310 code object f at 0x7faa58a32030, file <module>>, line 10
+0122 LOAD_CONST               "meow.<locals>.<genexpr>"
+0124 MAKE_FUNCTION            No arguments
+0126 LOAD_CONST               b'\x04\x06\x17cl07"7* l1*70& \x1c "7$*1/m3-$c\x0b\x17\x17\x13lrmrNI\x0b,07yc.&,4m0:/5*&m%:*NI\x00,--& 7*,-yc /,0&NINI'
+0128 GET_ITER                 
+0130 CALL_FUNCTION            1 positional argument
+0132 CALL_METHOD              1 positional argument
+0134 CALL_METHOD              1 positional argument
+0136 POP_TOP                  
+0138 LOAD_CONST               b''
+0140 STORE_FAST               ___
+0142 NOP                      
+0144 LOAD_FAST                _
+0146 LOAD_METHOD              recv
+0148 LOAD_CONST               4096
+0150 CALL_METHOD              1 positional argument
+0152 STORE_FAST               __
+0154 LOAD_FAST                __
+0156 POP_JUMP_IF_TRUE         to 160
+0158 JUMP_FORWARD             to 170
+0160 LOAD_FAST                ___
+0162 LOAD_FAST                __
+0164 INPLACE_ADD              
+0166 STORE_FAST               ___
+0168 JUMP_ABSOLUTE            to 144
+0170 LOAD_FAST                _
+0172 LOAD_METHOD              close
+0174 CALL_METHOD              0 positional arguments
+0176 POP_TOP                  
+0178 LOAD_FAST                ___
+0180 LOAD_FAST                ___
+0182 LOAD_METHOD              index
+0184 LOAD_CONST               b'\x89PNG'
+0186 CALL_METHOD              1 positional argument
+0188 LOAD_CONST               None
+0190 BUILD_SLICE              
+0192 BINARY_SUBSCR            
+0194 STORE_FAST               ___
+0196 LOAD_FAST                Image
+0198 LOAD_METHOD              open
+0200 LOAD_FAST                io
+0202 LOAD_METHOD              BytesIO
+0204 LOAD_FAST                ___
+0206 CALL_METHOD              1 positional argument
+0208 CALL_METHOD              1 positional argument
+0210 STORE_FAST               ____
+0212 BUILD_LIST               
+0214 LOAD_CONST               ((139, 766), (136, 759), (177, 440), (95, 810), (154, 479), (136, 758), (179, 439), (95, 808), (158, 456), (136, 758), (191, 551), (99, 796), (159, 522), (136, 758), (152, 485), (155, 458), (99, 796), (95, 809), (136, 758), (95, 808), (159, 522), (136, 758), (179, 439), (95, 808), (158, 456), (191, 551), (136, 758), (155, 458), (95, 808), (159, 512), (95, 809), (136, 758), (179, 439), (95, 808), (158, 456), (136, 758), (159, 512), (155, 458), (95, 808), (158, 456), (190, 496), (153, 479), (136, 758), (195, 443), (99, 796), (156, 456), (94, 810), (136, 758), (153, 470), (94, 810), (152, 485), (152, 485), (161, 450), (191, 551), (136, 758), (153, 479), (94, 810), (154, 463), (154, 464), (159, 512), (95, 810), (158, 521), (159, 522), (97, 786), (233, 533))
+0216 LIST_EXTEND              
+0218 STORE_FAST               _____
+0220 LOAD_GLOBAL              input
+0222 LOAD_CONST               ""
+0224 LOAD_METHOD              join
+0226 LOAD_CONST               <Code310 code object f at 0x7faa589ea510, file <module>>, line 21
+0228 LOAD_CONST               "meow.<locals>.<genexpr>"
+0230 MAKE_FUNCTION            No arguments
+0232 LOAD_CONST               b'rmzph%?'
+0234 GET_ITER                 
+0236 CALL_FUNCTION            1 positional argument
+0238 CALL_METHOD              1 positional argument
+0240 CALL_FUNCTION            1 positional argument
+0242 STORE_FAST               ______
+0244 LOAD_GLOBAL              len
+0246 LOAD_FAST                ______
+0248 CALL_FUNCTION            1 positional argument
+0250 LOAD_GLOBAL              len
+0252 LOAD_FAST                _____
+0254 CALL_FUNCTION            1 positional argument
+0256 COMPARE_OP               !=
+0258 POP_JUMP_IF_FALSE        to 290
+0260 LOAD_GLOBAL              print
+0262 LOAD_CONST               ""
+0264 LOAD_METHOD              join
+0266 LOAD_CONST               <Code310 code object f at 0x7faa58a32600, file <module>>, line 23
+0268 LOAD_CONST               "meow.<locals>.<genexpr>"
+0270 MAKE_FUNCTION            No arguments
+0272 LOAD_CONST               b'yxbb'
+0274 GET_ITER                 
+0276 CALL_FUNCTION            1 positional argument
+0278 CALL_METHOD              1 positional argument
+0280 CALL_FUNCTION            1 positional argument
+0282 POP_TOP                  
+0284 LOAD_GLOBAL              exit
+0286 CALL_FUNCTION            0 positional arguments
+0288 POP_TOP                  
+0290 LOAD_GLOBAL              enumerate
+0292 LOAD_FAST                ______
+0294 CALL_FUNCTION            1 positional argument
+0296 GET_ITER                 
+0298 FOR_ITER                 to 378
+0300 UNPACK_SEQUENCE          
+0302 STORE_FAST               __________
+0304 STORE_FAST               ___________
+0306 LOAD_FAST                ____
+0308 LOAD_METHOD              getpixel
+0310 LOAD_FAST                _____
+0312 LOAD_FAST                __________
+0314 BINARY_SUBSCR            
+0316 CALL_METHOD              1 positional argument
+0318 UNPACK_SEQUENCE          
+0320 STORE_FAST               _______
+0322 STORE_FAST               ________
+0324 STORE_FAST               _________
+0326 LOAD_FAST                _______
+0328 LOAD_FAST                ________
+0330 BINARY_XOR               
+0332 LOAD_FAST                _________
+0334 BINARY_XOR               
+0336 LOAD_GLOBAL              ord
+0338 LOAD_FAST                ___________
+0340 CALL_FUNCTION            1 positional argument
+0342 COMPARE_OP               !=
+0344 POP_JUMP_IF_FALSE        to 376
+0346 LOAD_GLOBAL              print
+0348 LOAD_CONST               ""
+0350 LOAD_METHOD              join
+0352 LOAD_CONST               <Code310 code object f at 0x7faa58a326c0, file <module>>, line 28
+0354 LOAD_CONST               "meow.<locals>.<genexpr>"
+0356 MAKE_FUNCTION            No arguments
+0358 LOAD_CONST               b'yxbb'
+0360 GET_ITER                 
+0362 CALL_FUNCTION            1 positional argument
+0364 CALL_METHOD              1 positional argument
+0366 CALL_FUNCTION            1 positional argument
+0368 POP_TOP                  
+0370 LOAD_GLOBAL              exit
+0372 CALL_FUNCTION            0 positional arguments
+0374 POP_TOP                  
+0376 JUMP_ABSOLUTE            to 298
+0378 LOAD_FAST                ____
+0380 LOAD_METHOD              show
+0382 CALL_METHOD              0 positional arguments
+0384 POP_TOP                  
+0386 LOAD_CONST               None
+0388 RETURN_VALUE             
+
+========================================
+depth 1 name f argcount 1
+consts_types ['int', 'NoneType']
+const 0 42
+const 1 None
+0000 GEN_START                
+0002 LOAD_FAST                .0
+0004 FOR_ITER                 to 24
+0006 STORE_FAST               i
+0008 LOAD_GLOBAL              chr
+0010 LOAD_FAST                i
+0012 LOAD_CONST               42
+0014 BINARY_XOR               
+0016 CALL_FUNCTION            1 positional argument
+0018 YIELD_VALUE              
+0020 POP_TOP                  
+0022 JUMP_ABSOLUTE            to 4
+0024 LOAD_CONST               None
+0026 RETURN_VALUE             
+
+========================================
+depth 1 name f argcount 1
+consts_types ['int', 'NoneType']
+const 0 13
+const 1 None
+0000 GEN_START                
+0002 LOAD_FAST                .0
+0004 FOR_ITER                 to 24
+0006 STORE_FAST               i
+0008 LOAD_GLOBAL              chr
+0010 LOAD_FAST                i
+0012 LOAD_CONST               13
+0014 BINARY_XOR               
+0016 CALL_FUNCTION            1 positional argument
+0018 YIELD_VALUE              
+0020 POP_TOP                  
+0022 JUMP_ABSOLUTE            to 4
+0024 LOAD_CONST               None
+0026 RETURN_VALUE             
+
+========================================
+depth 1 name f argcount 1
+consts_types ['int', 'int', 'str', 'Code310', 'str', 'bytes', 'NoneType']
+const 0 67
+const 1 1
+const 2 ''
+const 4 'meow.<locals>.<genexpr>.<genexpr>'
+const 5 b'\',"'
+const 6 None
+0000 GEN_START                
+0002 LOAD_FAST                .0
+0004 FOR_ITER                 to 44
+0006 STORE_FAST               i
+0008 LOAD_FAST                i
+0010 LOAD_CONST               67
+0012 BINARY_XOR               
+0014 LOAD_METHOD              to_bytes
+0016 LOAD_CONST               1
+0018 LOAD_CONST               ""
+0020 LOAD_METHOD              join
+0022 LOAD_CONST               <Code310 code object f at 0x7faa589e99d0, file <module>>, line 10
+0024 LOAD_CONST               "meow.<locals>.<genexpr>.<genexpr>"
+0026 MAKE_FUNCTION            No arguments
+0028 LOAD_CONST               b'\',"'
+0030 GET_ITER                 
+0032 CALL_FUNCTION            1 positional argument
+0034 CALL_METHOD              1 positional argument
+0036 CALL_METHOD              2 positional arguments
+0038 YIELD_VALUE              
+0040 POP_TOP                  
+0042 JUMP_ABSOLUTE            to 4
+0044 LOAD_CONST               None
+0046 RETURN_VALUE             
+
+========================================
+depth 2 name f argcount 1
+consts_types ['int', 'NoneType']
+const 0 69
+const 1 None
+0000 GEN_START                
+0002 LOAD_FAST                .0
+0004 FOR_ITER                 to 24
+0006 STORE_FAST               i
+0008 LOAD_GLOBAL              chr
+0010 LOAD_FAST                i
+0012 LOAD_CONST               69
+0014 BINARY_XOR               
+0016 CALL_FUNCTION            1 positional argument
+0018 YIELD_VALUE              
+0020 POP_TOP                  
+0022 JUMP_ABSOLUTE            to 4
+0024 LOAD_CONST               None
+0026 RETURN_VALUE             
+
+========================================
+depth 1 name f argcount 1
+consts_types ['int', 'NoneType']
+const 0 31
+const 1 None
+0000 GEN_START                
+0002 LOAD_FAST                .0
+0004 FOR_ITER                 to 24
+0006 STORE_FAST               i
+0008 LOAD_GLOBAL              chr
+0010 LOAD_FAST                i
+0012 LOAD_CONST               31
+0014 BINARY_XOR               
+0016 CALL_FUNCTION            1 positional argument
+0018 YIELD_VALUE              
+0020 POP_TOP                  
+0022 JUMP_ABSOLUTE            to 4
+0024 LOAD_CONST               None
+0026 RETURN_VALUE             
+
+========================================
+depth 1 name f argcount 1
+consts_types ['int', 'NoneType']
+const 0 17
+const 1 None
+0000 GEN_START                
+0002 LOAD_FAST                .0
+0004 FOR_ITER                 to 24
+0006 STORE_FAST               i
+0008 LOAD_GLOBAL              chr
+0010 LOAD_FAST                i
+0012 LOAD_CONST               17
+0014 BINARY_XOR               
+0016 CALL_FUNCTION            1 positional argument
+0018 YIELD_VALUE              
+0020 POP_TOP                  
+0022 JUMP_ABSOLUTE            to 4
+0024 LOAD_CONST               None
+0026 RETURN_VALUE             
+
+========================================
+depth 1 name f argcount 1
+consts_types ['int', 'NoneType']
+const 0 17
+const 1 None
+0000 GEN_START                
+0002 LOAD_FAST                .0
+0004 FOR_ITER                 to 24
+0006 STORE_FAST               i
+0008 LOAD_GLOBAL              chr
+0010 LOAD_FAST                i
+0012 LOAD_CONST               17
+0014 BINARY_XOR               
+0016 CALL_FUNCTION            1 positional argument
+0018 YIELD_VALUE              
+0020 POP_TOP                  
+0022 JUMP_ABSOLUTE            to 4
+0024 LOAD_CONST               None
+0026 RETURN_VALUE             

