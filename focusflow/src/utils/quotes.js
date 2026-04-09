@@ -1,0 +1,17 @@
+export const quotes = [
+  { text: "The secret of getting ahead is getting started.", author: "Mark Twain" },
+  { text: "Focus on being productive instead of busy.", author: "Tim Ferriss" },
+  { text: "It's not that I'm so smart, it's just that I stay with problems longer.", author: "Albert Einstein" },
+  { text: "Do the hard jobs first. The easy jobs will take care of themselves.", author: "Dale Carnegie" },
+  { text: "Action is the foundational key to all success.", author: "Pablo Picasso" },
+  { text: "Amateurs sit and wait for inspiration, the rest of us just get up and go to work.", author: "Stephen King" },
+  { text: "You don't have to be great to start, but you have to start to be great.", author: "Zig Ziglar" },
+  { text: "The way to get started is to quit talking and begin doing.", author: "Walt Disney" },
+  { text: "Productivity is never an accident. It is always the result of a commitment to excellence.", author: "Paul J. Meyer" },
+  { text: "Start where you are. Use what you have. Do what you can.", author: "Arthur Ashe" },
+  { text: "Your future is created by what you do today, not tomorrow.", author: "Robert Kiyosaki" },
+  { text: "Don't watch the clock; do what it does. Keep going.", author: "Sam Levenson" },
+  { text: "Success is the sum of small efforts, repeated day in and day out.", author: "Robert Collier" },
+  { text: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
+  { text: "What we fear of doing most is usually what we most need to do.", author: "Tim Ferriss" },
+];
