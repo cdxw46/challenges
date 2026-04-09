@@ -4,4 +4,10 @@ import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  build: {
+    chunkSizeWarningLimit: 800,
+  },
+  preview: {
+    allowedHosts: ['copied-mins-consortium-facilities.trycloudflare.com'],
+  },
 });
