@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{% block title %}Pirate Chat{% endblock %}</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="header">
+    <h1><a href="http://product.{{ host }}/" style="color:#d4a636;text-decoration:none;">The Pirates</a> &mdash; Pirate Chat</h1>
+    <div><a href="http://product.{{ host }}/" class="back-link">&larr; Back to Port</a> <a href="/" class="back-link">&larr; Back to Chat</a> {% block nav %}{% endblock %}</div>
+  </div>
+  <div class="container">
+    {% block content %}{% endblock %}
+  </div>
+</body>
+</html>
