@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMURF PBX Admin Panel</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f4f4f9; }
+        header { background: #0056b3; color: white; padding: 1rem; text-align: center; }
+        .container { max-width: 800px; margin: 2rem auto; padding: 1rem; background: white; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+        th, td { padding: 0.75rem; border-bottom: 1px solid #ddd; text-align: left; }
+        th { background: #f8f9fa; }
+        .status-online { color: green; font-weight: bold; }
+        .status-offline { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>SMURF PBX</h1>
+        <p>Enterprise Communications Platform</p>
+    </header>
+    <div class="container">
+        <h2>Dashboard</h2>
+        <p id="system-status">Loading status...</p>
+        
+        <h3>Extensions</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Extension</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="extensions-list">
+                <tr><td colspan="3">Loading...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        fetch('/api/status')
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('system-status').innerText = `System Status: ${data.status.toUpperCase()} | Version: ${data.version}`;
+            });
+
+        fetch('/api/extensions')
+            .then(res => res.json())
+            .then(data => {
+                const tbody = document.getElementById('extensions-list');
+                tbody.innerHTML = '';
+                data.extensions.forEach(ext => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${ext.ext}</td>
+                            <td class="status-${ext.status}">${ext.status.toUpperCase()}</td>
+                            <td><button>Edit</button> <button>Delete</button></td>
+                        </tr>
+                    `;
+                });
+            });
+    </script>
+</body>
+</html>
