@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 import logging
 import sys
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -42,6 +42,7 @@ def configure_logging(log_path: Path) -> None:
 @dataclass(slots=True)
 class StructuredLogger:
     name: str
+    _logger: logging.Logger = field(init=False, repr=False)
 
     def __post_init__(self) -> None:
         self._logger = logging.getLogger(self.name)

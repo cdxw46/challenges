@@ -652,9 +652,15 @@ class PbxEngine:
         return formatdate(usegmt=True)
 
     def dashboard_snapshot(self) -> dict[str, Any]:
+        extensions = []
+        for ext in self.store.list_extensions():
+            item = asdict(ext)
+            for key in ("password_hash", "pin_hash", "digest_md5", "digest_sha256"):
+                item.pop(key, None)
+            extensions.append(item)
         return {
             "kpis": self.store.kpis(),
-            "extensions": [asdict(ext) for ext in self.store.list_extensions()],
+            "extensions": extensions,
             "registrations": [asdict(item) for item in self.store.list_registrations()],
             "calls": [asdict(call) for call in self.store.list_calls()],
             "messages": self.store.list_messages(limit=50),
@@ -678,7 +684,12 @@ class PbxEngine:
         role = str(payload.get("role", "user"))
         self.store.create_extension(extension, display_name, password, pin, email, role)
         created = self.store.fetch_extension(extension)
-        return asdict(created) if created else {}
+        if created is None:
+            return {}
+        item = asdict(created)
+        for key in ("password_hash", "pin_hash", "digest_md5", "digest_sha256"):
+            item.pop(key, None)
+        return item
 
     def set_presence(self, extension: str, presence: str) -> None:
         self.store.set_presence(extension, presence)

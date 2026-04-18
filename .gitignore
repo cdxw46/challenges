@@ -1,0 +1,4 @@
+smurf/runtime/
+smurf/runtime-e2e/
+**/__pycache__/
+**/*.pyc
