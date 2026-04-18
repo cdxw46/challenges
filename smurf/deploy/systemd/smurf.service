@@ -1,0 +1,16 @@
+[Unit]
+Description=SMURF PBX platform
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/smurf
+Environment=PYTHONUNBUFFERED=1
+Environment=PYTHONPATH=/opt/smurf/src
+ExecStart=/usr/bin/python3 -m smurf.main
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target
