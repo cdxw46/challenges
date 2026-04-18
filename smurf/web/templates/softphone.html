@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SMURF Softphone</title>
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body class="phone-body">
+  <main class="phone">
+    <header>
+      <span class="brand-mini"><span class="dot"></span> SMURF Softphone</span>
+      <span id="status" class="badge gray">offline</span>
+    </header>
+    <section class="login" id="phone-login">
+      <h2>Sign in to your extension</h2>
+      <label>Server (host:port)<input id="srv" placeholder="auto-detected" /></label>
+      <label>Extension<input id="ext" placeholder="1001" /></label>
+      <label>Password<input id="pwd" type="password" /></label>
+      <label>Display name<input id="disp" placeholder="optional" /></label>
+      <label class="row"><input id="usews" type="checkbox" checked /> Use WSS (TLS) when available</label>
+      <button id="connect" class="btn primary">Connect</button>
+      <p class="error" id="login-err"></p>
+    </section>
+    <section class="dialer hidden" id="phone-dialer">
+      <div class="display">
+        <div id="display-num">&nbsp;</div>
+        <div id="display-state" class="muted">idle</div>
+      </div>
+      <div class="keypad">
+        <button>1</button><button>2</button><button>3</button>
+        <button>4</button><button>5</button><button>6</button>
+        <button>7</button><button>8</button><button>9</button>
+        <button>*</button><button>0</button><button>#</button>
+      </div>
+      <div class="phone-actions">
+        <button id="call" class="btn primary">Call</button>
+        <button id="hangup" class="btn danger" disabled>Hang up</button>
+        <button id="mute" class="btn ghost" disabled>Mute</button>
+        <button id="hold" class="btn ghost" disabled>Hold</button>
+      </div>
+      <div class="incoming hidden" id="incoming">
+        <p>Incoming call from <b id="inc-from">?</b></p>
+        <button id="answer" class="btn primary">Answer</button>
+        <button id="reject" class="btn danger">Reject</button>
+      </div>
+      <details class="log"><summary>Signaling log</summary><pre id="log"></pre></details>
+    </section>
+    <audio id="audio-remote" autoplay playsinline></audio>
+  </main>
+  <script src="/static/sip-ws.js"></script>
+  <script src="/static/softphone.js"></script>
+</body>
+</html>

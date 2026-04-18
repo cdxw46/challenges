@@ -1,0 +1,38 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+
+# Runtime data
+smurf/data/
+smurf/logs/
+smurf/recordings/
+smurf/voicemail/
+smurf/certs/
+smurf/moh/
+data/
+logs/
+recordings/
+voicemail/
+certs/
+moh/
+
+# Local
+.env
+.env.*
+*.sqlite3*
+*.log
+*.pcap
+.cache/
+.playwright/
+node_modules/
+
+# Editor
+.vscode/
+.idea/
+*.swp

@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SMURF Admin</title>
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body class="app">
+  <aside class="sidebar">
+    <div class="brand"><span class="dot"></span> SMURF</div>
+    <nav>
+      <a data-tab="dashboard" class="active">Dashboard</a>
+      <a data-tab="extensions">Extensions</a>
+      <a data-tab="trunks">Trunks</a>
+      <a data-tab="dialplan">Dial Plan</a>
+      <a data-tab="ringgroups">Ring Groups</a>
+      <a data-tab="queues">Queues</a>
+      <a data-tab="ivrs">IVRs</a>
+      <a data-tab="conferences">Conferences</a>
+      <a data-tab="cdr">Call Records</a>
+      <a data-tab="recordings">Recordings</a>
+      <a data-tab="voicemail">Voicemail</a>
+      <a data-tab="chat">Chat</a>
+      <a data-tab="settings">Settings</a>
+      <a data-tab="logs">Live Logs</a>
+    </nav>
+    <div class="who">
+      <span id="who"></span>
+      <a id="logout" href="#">Sign out</a>
+    </div>
+    <a class="btn ghost" href="/softphone" target="_blank">Open Softphone</a>
+  </aside>
+  <section class="content">
+    <header class="topbar">
+      <h2 id="title">Dashboard</h2>
+      <span class="kpi" id="kpi-active">0 active</span>
+      <span class="kpi" id="kpi-online">0 online</span>
+      <span class="kpi" id="kpi-trunks">0 trunks</span>
+      <span class="kpi" id="kpi-today">0 today</span>
+    </header>
+    <div id="view"></div>
+  </section>
+  <script src="/static/admin.js"></script>
+</body>
+</html>

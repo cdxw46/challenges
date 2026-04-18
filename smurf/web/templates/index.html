@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SMURF PBX</title>
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <main class="landing">
+    <div class="card">
+      <h1>SMURF PBX</h1>
+      <p class="tag">Built from scratch — RFC&nbsp;3261 SIP, native RTP, WebRTC softphone.</p>
+      <div class="actions">
+        <a class="btn primary" href="/admin">Admin Panel</a>
+        <a class="btn" href="/softphone">Web Softphone</a>
+        <a class="btn ghost" href="/api/docs">API</a>
+      </div>
+      <p class="footnote">Default: <code>admin / smurf-admin</code> — change it from the panel.</p>
+    </div>
+  </main>
+  <script>
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(()=>{});
+  </script>
+</body>
+</html>

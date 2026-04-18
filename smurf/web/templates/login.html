@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SMURF — Sign in</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <main class="landing">
+    <form id="login-form" class="card narrow">
+      <h1>SMURF Sign in</h1>
+      <label>Username<input name="username" autocomplete="username" required value="admin" /></label>
+      <label>Password<input name="password" type="password" autocomplete="current-password" required /></label>
+      <label>2FA code (if enabled)<input name="totp" inputmode="numeric" pattern="[0-9]{6}" placeholder="123456" /></label>
+      <button class="btn primary" type="submit">Sign in</button>
+      <p class="error" id="err"></p>
+    </form>
+  </main>
+  <script>
+    document.getElementById('login-form').addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      const fd = new FormData(ev.target);
+      const body = Object.fromEntries(fd.entries());
+      if (!body.totp) delete body.totp;
+      const r = await fetch('/api/auth/login', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)});
+      if (r.ok) {
+        const j = await r.json();
+        localStorage.setItem('smurf.token', j.token);
+        localStorage.setItem('smurf.role', j.role);
+        localStorage.setItem('smurf.user', j.username);
+        location.href = '/admin';
+      } else {
+        const e = await r.json().catch(()=>({detail:'login failed'}));
+        document.getElementById('err').textContent = e.detail || 'login failed';
+      }
+    });
+  </script>
+</body>
+</html>
