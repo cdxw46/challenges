@@ -6,7 +6,7 @@ import hmac
 import json
 import secrets
 import time
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from typing import Any
 
 
@@ -194,4 +194,4 @@ def decode_jwt(token: str, secret: str) -> dict[str, Any]:
 def issue_jwt(subject: str, role: str, secret: str, ttl_seconds: int = 3600) -> str:
     now = int(time.time())
     claims = JwtClaims(sub=subject, role=role, iat=now, exp=now + ttl_seconds)
-    return encode_jwt(claims.__dict__, secret)
+    return encode_jwt(asdict(claims), secret)

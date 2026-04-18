@@ -3,7 +3,10 @@ from __future__ import annotations
 import asyncio
 import json
 import os
+import shutil
+import socket
 import ssl
+import struct
 import sys
 import time
 import urllib.request
@@ -18,6 +21,7 @@ if str(SRC) not in sys.path:
 from smurf.config import SmurfConfig
 from smurf.pbx import PbxEngine
 from smurf.security import compute_digest_response, current_totp
+from smurf.sdp import parse_sdp
 from smurf.sip import create_branch, create_tag, extract_messages_from_stream, parse_auth_header, parse_sip_message
 from smurf.web import WebApp
 
@@ -169,18 +173,53 @@ class SipDialog:
         ]
         return ("\r\n".join(headers) + "\r\n\r\n").encode("utf-8")
 
+    def build_ack(self, target_uri: str, call_id: str, target_extension: str) -> bytes:
+        headers = [
+            f"ACK {target_uri} SIP/2.0",
+            f"Via: SIP/2.0/TCP {self.local_host}:{self.local_port};branch={create_branch()}",
+            f"From: <sip:{self.extension}@smurf.local>;tag={self.from_tag}",
+            f"To: <sip:{target_extension}@smurf.local>;tag=callee123",
+            f"Call-ID: {call_id}",
+            f"CSeq: {self.cseq} ACK",
+            "Max-Forwards: 70",
+            "Content-Length: 0",
+        ]
+        return ("\r\n".join(headers) + "\r\n\r\n").encode("utf-8")
+
+
+def build_rtp_packet(sequence: int, timestamp: int, ssrc: int, payload: bytes) -> bytes:
+    return struct.pack("!BBHII", 0x80, 0x00, sequence & 0xFFFF, timestamp & 0xFFFFFFFF, ssrc) + payload
+
+
+def send_udp_packet(sock: socket.socket, host: str, port: int, payload: bytes) -> None:
+    sock.sendto(payload, (host, port))
+
+
+async def recv_udp_packet(sock: socket.socket, timeout: float = 2.0) -> bytes:
+    loop = asyncio.get_running_loop()
+    data, _ = await asyncio.wait_for(loop.sock_recvfrom(sock, 2048), timeout=timeout)
+    return data
+
+
+def fetch_json(request: urllib.request.Request, context: ssl.SSLContext, timeout: float = 5.0) -> dict[str, object]:
+    with urllib.request.urlopen(request, context=context, timeout=timeout) as response_obj:
+        return json.loads(response_obj.read().decode("utf-8"))
+
 
 async def run_smoke() -> dict[str, object]:
+    runtime_dir = ROOT / "runtime-e2e"
+    if runtime_dir.exists():
+        shutil.rmtree(runtime_dir)
     os.environ.setdefault("SMURF_BIND_HOST", "127.0.0.1")
     os.environ.setdefault("SMURF_PUBLIC_HOST", "127.0.0.1")
     os.environ.setdefault("SMURF_SIP_PORT", "25060")
     os.environ.setdefault("SMURF_SIP_TLS_PORT", "25061")
     os.environ.setdefault("SMURF_WEB_PORT", "25001")
-    os.environ.setdefault("SMURF_RUNTIME_DIR", str(ROOT / "runtime-e2e"))
-    os.environ.setdefault("SMURF_DB_PATH", str(ROOT / "runtime-e2e" / "smurf.db"))
-    os.environ.setdefault("SMURF_LOG_PATH", str(ROOT / "runtime-e2e" / "smurf.log"))
-    os.environ.setdefault("SMURF_TLS_CERT", str(ROOT / "runtime-e2e" / "tls" / "server.crt"))
-    os.environ.setdefault("SMURF_TLS_KEY", str(ROOT / "runtime-e2e" / "tls" / "server.key"))
+    os.environ.setdefault("SMURF_RUNTIME_DIR", str(runtime_dir))
+    os.environ.setdefault("SMURF_DB_PATH", str(runtime_dir / "smurf.db"))
+    os.environ.setdefault("SMURF_LOG_PATH", str(runtime_dir / "smurf.log"))
+    os.environ.setdefault("SMURF_TLS_CERT", str(runtime_dir / "tls" / "server.crt"))
+    os.environ.setdefault("SMURF_TLS_KEY", str(runtime_dir / "tls" / "server.key"))
 
     engine = await PbxEngine.build(ROOT)
     web = WebApp(engine)
@@ -244,8 +283,44 @@ async def run_smoke() -> dict[str, object]:
         await client_b.send(client_b.build_response(forwarded, 200, "OK", ok_body))
         ok_forwarded = await client_a.recv_message()
         assert ok_forwarded.status_code == 200, ok_forwarded.start_line
+        target_uri = ok_forwarded.header("Contact").strip("<>")
+        await client_a.send(client_a.build_ack(target_uri, ok_forwarded.header("Call-ID"), "1001"))
         ack = await client_b.recv_message()
         assert ack.method == "ACK", ack.start_line
+
+        answer_sdp = parse_sdp(ok_forwarded.body.decode("utf-8"))
+        relay_port = answer_sdp.media[0].port
+        left_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        right_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        left_sock.bind(("127.0.0.1", 31000))
+        right_sock.bind(("127.0.0.1", 31002))
+        left_sock.setblocking(False)
+        right_sock.setblocking(False)
+        try:
+            left_recv = asyncio.create_task(recv_udp_packet(left_sock))
+            right_recv = asyncio.create_task(recv_udp_packet(right_sock))
+            await asyncio.sleep(0.1)
+            await asyncio.to_thread(
+                send_udp_packet,
+                left_sock,
+                "127.0.0.1",
+                relay_port,
+                build_rtp_packet(1, 160, 1111, b"\xff" * 160),
+            )
+            await asyncio.to_thread(
+                send_udp_packet,
+                right_sock,
+                "127.0.0.1",
+                30002,
+                build_rtp_packet(1, 160, 2222, b"\xd5" * 160),
+            )
+            left_packet = await left_recv
+            right_packet = await right_recv
+        finally:
+            left_sock.close()
+            right_sock.close()
+        assert len(left_packet) >= 12, "left RTP packet not received"
+        assert len(right_packet) >= 12, "right RTP packet not received"
 
         await client_a.send(client_a.build_bye("1001", ok_forwarded.header("Call-ID")))
         bye_ok = await client_a.recv_message()
@@ -268,8 +343,7 @@ async def run_smoke() -> dict[str, object]:
             headers={"Content-Type": "application/json"},
             method="POST",
         )
-        with urllib.request.urlopen(login_req, context=ctx, timeout=5) as response_obj:
-            login_payload = json.loads(response_obj.read().decode("utf-8"))
+        login_payload = await asyncio.to_thread(fetch_json, login_req, ctx, 5.0)
         token = login_payload["token"]
 
         dashboard_req = urllib.request.Request(
@@ -277,8 +351,7 @@ async def run_smoke() -> dict[str, object]:
             headers={"Authorization": f"Bearer {token}"},
             method="GET",
         )
-        with urllib.request.urlopen(dashboard_req, context=ctx, timeout=5) as response_obj:
-            dashboard_payload = json.loads(response_obj.read().decode("utf-8"))
+        dashboard_payload = await asyncio.to_thread(fetch_json, dashboard_req, ctx, 5.0)
 
         return {
             "login": "ok",

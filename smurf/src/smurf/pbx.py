@@ -178,8 +178,11 @@ class PbxEngine:
                 if call.callee_sdp:
                     self._update_media_from_sdp(call, call.callee_sdp, caller=False)
                 await self._ensure_media_session(call)
+                forwarded = self._forward_response(message)
+                if forwarded.body:
+                    forwarded.body = self._rewrite_answer_sdp_for_caller(call).encode("utf-8")
                 if caller_endpoint is not None:
-                    await self._send_response(caller_endpoint, self._forward_response(message))
+                    await self._send_response(caller_endpoint, forwarded)
                 call.state = "active"
                 record = self._to_call_record(call)
                 record.answered_at = time.time()
@@ -605,6 +608,27 @@ class PbxEngine:
         if via_index is not None:
             del headers[via_index]
         return SipMessage(message.start_line, headers, message.body)
+
+    def _rewrite_answer_sdp_for_caller(self, call: ActiveCall) -> str:
+        host = self.config.public_host
+        relay_port = call.relay_port_a or call.callee_media_port or 0
+        payload_type = int(call.metadata.get("payload_type", PAYLOAD_PCMU))
+        codec = str(call.metadata.get("codec", "PCMU"))
+        media = MediaDescription(
+            media="audio",
+            port=relay_port,
+            proto="RTP/AVP",
+            formats=[str(payload_type), "101"] if payload_type != 101 else ["101"],
+            attributes={
+                "rtpmap": [f"{payload_type} {codec}/8000", "101 telephone-event/8000"],
+            },
+        )
+        return SessionDescription(
+            origin=f"- 3 3 IN IP4 {host}",
+            session_name="SMURF Relay",
+            connection=f"IN IP4 {host}",
+            media=[media],
+        ).render()
 
     def _serialize_endpoint(self, endpoint: SipEndpoint) -> dict[str, Any]:
         return {
