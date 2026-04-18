@@ -148,7 +148,7 @@ def issue_nonce() -> str:
     return secrets.token_hex(16)
 
 
-@dataclass(slots=True)
+@dataclass
 class JwtClaims:
     sub: str
     role: str
