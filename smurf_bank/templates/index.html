@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Smurf Bank — Inicio{% endblock %}
+{% block content %}
+<section class="grid md:grid-cols-2 gap-8 items-center">
+  <div>
+    <h1 class="text-4xl sm:text-5xl font-bold leading-tight">
+      El banco oficial de la <span class="text-smurf-600">Aldea Pitufa</span>.
+    </h1>
+    <p class="mt-4 text-smurf-800/80 text-lg">
+      Guarda tus <strong>smurfberries</strong>, transfiere a otros pitufos y
+      sigue tu historial. Seguridad a prueba de Gargamel*.
+    </p>
+    <p class="mt-1 text-xs text-smurf-700/70">
+      *Términos y condiciones aplican.
+    </p>
+    <div class="mt-6 flex flex-wrap gap-3">
+      {% if g.user %}
+        <a href="{{ url_for('dashboard') }}" class="px-5 py-3 rounded-xl bg-smurf-600 text-white font-semibold shadow hover:bg-smurf-700">Ir a mi dashboard</a>
+        <a href="{{ url_for('transfer') }}" class="px-5 py-3 rounded-xl bg-white border border-smurf-200 font-semibold hover:bg-smurf-50">Transferir</a>
+      {% else %}
+        <a href="{{ url_for('register') }}" class="px-5 py-3 rounded-xl bg-smurf-600 text-white font-semibold shadow hover:bg-smurf-700">Abre tu cuenta</a>
+        <a href="{{ url_for('login') }}" class="px-5 py-3 rounded-xl bg-white border border-smurf-200 font-semibold hover:bg-smurf-50">Iniciar sesión</a>
+      {% endif %}
+    </div>
+    <div class="mt-8 grid grid-cols-3 gap-3 max-w-md">
+      <div class="rounded-xl bg-white border border-smurf-100 p-3 text-center">
+        <div class="text-2xl">👥</div>
+        <div class="text-xs text-smurf-700">Pitufos</div>
+        <div class="font-bold">{{ total_users }}</div>
+      </div>
+      <div class="rounded-xl bg-white border border-smurf-100 p-3 text-center">
+        <div class="text-2xl">💎</div>
+        <div class="text-xs text-smurf-700">Bono inicial</div>
+        <div class="font-bold">1000 SB</div>
+      </div>
+      <div class="rounded-xl bg-white border border-smurf-100 p-3 text-center">
+        <div class="text-2xl">🔐</div>
+        <div class="text-xs text-smurf-700">Auth</div>
+        <div class="font-bold">JWT</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="relative">
+    <div class="absolute -inset-2 bg-gradient-to-br from-smurf-300 to-smurf-600 rounded-3xl blur opacity-25"></div>
+    <div class="relative rounded-3xl bg-white border border-smurf-200 p-6 shadow-xl">
+      <div class="flex items-center justify-between">
+        <div>
+          <div class="text-xs uppercase tracking-widest text-smurf-500">Smurf Card</div>
+          <div class="text-lg font-bold">Aldea Pitufa</div>
+        </div>
+        <div class="text-3xl">🫐</div>
+      </div>
+      <div class="mt-8 font-mono text-xl tracking-widest text-smurf-800">5337  ····  ····  P4P4</div>
+      <div class="mt-6 flex justify-between text-xs text-smurf-700">
+        <div>
+          <div class="opacity-70">TITULAR</div>
+          <div class="font-bold">PAPA SMURF</div>
+        </div>
+        <div>
+          <div class="opacity-70">VÁLIDA</div>
+          <div class="font-bold">12/99</div>
+        </div>
+        <div>
+          <div class="opacity-70">CVV</div>
+          <div class="font-bold">···</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

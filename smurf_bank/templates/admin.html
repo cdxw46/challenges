@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Admin — Smurf Bank{% endblock %}
+{% block content %}
+<div class="rounded-2xl bg-gradient-to-br from-smurf-700 to-smurf-900 text-white p-6 shadow-lg">
+  <div class="flex items-center justify-between flex-wrap gap-3">
+    <div>
+      <div class="text-xs uppercase tracking-widest opacity-80">Panel de administración</div>
+      <h1 class="text-3xl font-extrabold mt-1">¡Bienvenido, Papá Pitufo!</h1>
+    </div>
+    <div class="text-5xl">🍄</div>
+  </div>
+
+  <div class="mt-6 rounded-xl bg-black/30 border border-white/10 p-4">
+    <div class="text-xs uppercase tracking-widest opacity-80">Flag</div>
+    <div class="mt-1 font-mono text-lg break-all select-all">{{ flag }}</div>
+  </div>
+</div>
+
+<section class="grid md:grid-cols-2 gap-6 mt-6">
+  <div class="rounded-2xl bg-white border border-smurf-200 p-5">
+    <h2 class="text-xl font-bold">Usuarios ({{ users|length }})</h2>
+    <div class="mt-3 divide-y divide-smurf-100">
+      {% for u in users %}
+      <div class="py-2 flex items-center justify-between text-sm">
+        <div>
+          <div class="font-semibold">@{{ u.username }} {% if u.is_admin %}<span class="ml-1 text-[10px] bg-smurf-100 text-smurf-800 px-1.5 py-0.5 rounded">ADMIN</span>{% endif %}</div>
+          <div class="text-xs text-smurf-700/70">id #{{ u.id }}</div>
+        </div>
+        <div class="font-mono">{{ '{:,}'.format(u.balance) }} SB</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="rounded-2xl bg-white border border-smurf-200 p-5">
+    <h2 class="text-xl font-bold">Últimas transacciones</h2>
+    {% if txs %}
+    <div class="mt-3 divide-y divide-smurf-100 text-sm">
+      {% for tx in txs %}
+      <div class="py-2 flex items-center justify-between">
+        <div>
+          <div class="font-semibold">@{{ tx.sender.username }} → @{{ tx.receiver.username }}</div>
+          {% if tx.note %}<div class="text-xs text-smurf-700/70">"{{ tx.note }}"</div>{% endif %}
+        </div>
+        <div class="font-mono">{{ '{:,}'.format(tx.amount) }} SB</div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-sm text-smurf-700/80 mt-2">Sin transacciones todavía.</p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

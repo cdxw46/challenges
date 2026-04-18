@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — Smurf Bank{% endblock %}
+{% block content %}
+<section class="grid lg:grid-cols-3 gap-6">
+  <div class="lg:col-span-1">
+    <div class="rounded-2xl bg-gradient-to-br from-smurf-500 to-smurf-700 text-white p-6 shadow-lg">
+      <div class="flex items-center justify-between">
+        <div>
+          <div class="text-xs uppercase tracking-widest opacity-80">Saldo</div>
+          <div class="text-4xl font-extrabold mt-1">{{ '{:,}'.format(g.user.balance) }} <span class="text-base opacity-80">SB</span></div>
+        </div>
+        <div class="text-5xl">🫐</div>
+      </div>
+      <div class="mt-4 text-sm opacity-90">@{{ g.user.username }}{% if g.token_payload.is_admin %} · <span class="font-bold">ADMIN</span>{% endif %}</div>
+      <div class="mt-6 flex gap-2">
+        <a href="{{ url_for('transfer') }}" class="flex-1 text-center py-2 rounded-lg bg-white/15 hover:bg-white/25 font-semibold">Transferir</a>
+        <a href="{{ url_for('api_me') }}" class="flex-1 text-center py-2 rounded-lg bg-white/15 hover:bg-white/25 font-semibold">/api/me</a>
+      </div>
+    </div>
+
+    <div class="mt-6 rounded-2xl bg-white border border-smurf-200 p-5">
+      <h3 class="font-bold">Tu token JWT (cookie)</h3>
+      <p class="text-xs text-smurf-700/80 mt-1">La cookie <code class="font-mono">smurf_token</code> es legible. Inspecciónala con devtools.</p>
+      <pre id="token" class="mt-3 text-[11px] bg-smurf-50 border border-smurf-200 rounded-lg p-3 overflow-x-auto whitespace-pre-wrap break-all"></pre>
+      <script>
+        document.getElementById('token').textContent =
+          (document.cookie.split('; ').find(c => c.startsWith('smurf_token=')) || '').split('=').slice(1).join('=') || '(sin cookie)';
+      </script>
+    </div>
+  </div>
+
+  <div class="lg:col-span-2">
+    <div class="rounded-2xl bg-white border border-smurf-200 p-5">
+      <h2 class="text-xl font-bold">Movimientos recientes</h2>
+      {% if txs %}
+      <div class="mt-3 divide-y divide-smurf-100">
+        {% for tx in txs %}
+        {% set out = tx.sender_id == g.user.id %}
+        <div class="py-3 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full grid place-items-center {% if out %}bg-red-100 text-red-700{% else %}bg-emerald-100 text-emerald-700{% endif %} font-bold">
+            {% if out %}↑{% else %}↓{% endif %}
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="font-semibold truncate">
+              {% if out %}A @{{ tx.receiver.username }}{% else %}De @{{ tx.sender.username }}{% endif %}
+            </div>
+            {% if tx.note %}<div class="text-xs text-smurf-700/80 truncate">"{{ tx.note }}"</div>{% endif %}
+          </div>
+          <div class="font-mono {% if out %}text-red-700{% else %}text-emerald-700{% endif %} font-bold">
+            {% if out %}-{% else %}+{% endif %}{{ '{:,}'.format(tx.amount) }} SB
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p class="text-sm text-smurf-700/80 mt-2">Aún no tienes movimientos. Haz tu primera <a href="{{ url_for('transfer') }}" class="text-smurf-600 font-semibold">transferencia</a>.</p>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %}

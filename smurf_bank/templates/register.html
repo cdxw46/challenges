@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Registro — Smurf Bank{% endblock %}
+{% block content %}
+<div class="max-w-md mx-auto mt-6 bg-white border border-smurf-200 rounded-2xl shadow p-6">
+  <h1 class="text-2xl font-bold text-center">Crea tu cuenta</h1>
+  <p class="text-center text-sm text-smurf-700/80 mt-1">Recibirás 1000 smurfberries de regalo.</p>
+  <form method="post" class="mt-5 space-y-4">
+    <div>
+      <label class="text-sm font-semibold">Usuario</label>
+      <input name="username" required autofocus minlength="3" maxlength="32"
+        pattern="[A-Za-z0-9_]+"
+        class="mt-1 w-full px-3 py-2 rounded-lg border border-smurf-200 focus:border-smurf-500 focus:ring focus:ring-smurf-200 outline-none" />
+      <p class="text-xs text-smurf-700/70 mt-1">Letras, números y guion bajo. 3–32 caracteres.</p>
+    </div>
+    <div>
+      <label class="text-sm font-semibold">Contraseña</label>
+      <input name="password" type="password" required minlength="6"
+        class="mt-1 w-full px-3 py-2 rounded-lg border border-smurf-200 focus:border-smurf-500 focus:ring focus:ring-smurf-200 outline-none" />
+    </div>
+    <button class="w-full py-2.5 rounded-lg bg-smurf-600 text-white font-semibold hover:bg-smurf-700">Crear cuenta</button>
+  </form>
+  <p class="mt-4 text-sm text-center">¿Ya tienes cuenta? <a href="{{ url_for('login') }}" class="text-smurf-600 font-semibold">Inicia sesión</a></p>
+</div>
+{% endblock %}

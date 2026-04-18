@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}404 — Smurf Bank{% endblock %}
+{% block content %}
+<div class="max-w-lg mx-auto text-center mt-10">
+  <div class="text-7xl">🍄</div>
+  <h1 class="text-3xl font-bold mt-3">No encontrado</h1>
+  <p class="text-smurf-700/80 mt-2">Esa ruta se la llevó Gargamel.</p>
+  <a href="{{ url_for('index') }}" class="inline-block mt-5 px-4 py-2 rounded-lg bg-smurf-600 text-white font-semibold">Volver al inicio</a>
+</div>
+{% endblock %}
