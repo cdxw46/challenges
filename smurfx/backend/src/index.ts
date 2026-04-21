@@ -19,12 +19,18 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 
+import productRoutes from './routes/products';
+import checkoutRoutes from './routes/checkout';
+
 // Health Check Endpoint
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
-// API Routes (to be implemented)
+// API Routes
+app.use('/api/v1/products', productRoutes);
+app.use('/api/v1/checkout', checkoutRoutes);
+
 app.use('/api/v1', (req, res) => {
   res.status(200).json({ message: 'Welcome to SMURFX API v1' });
 });
