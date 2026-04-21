@@ -3,6 +3,15 @@
 Tienda online completa construida desde cero con **Next.js 14 (App Router) + TypeScript + Tailwind + Prisma**. Sin
 plantillas, sin Shopify, sin WordPress.
 
+## Demo en vivo
+
+URL pública (Cloudflare Tunnel temporal): **https://welding-martin-illinois-alaska.trycloudflare.com**
+
+- Tienda: `/`
+- Admin: `/admin` (admin@smurfx.com / Admin1234!)
+- Docs API: `/api/docs`
+- Sitemap: `/sitemap.xml`
+
 ## Características
 
 - Catálogo con líneas SmurfAir, SmurfForce, SmurfRun, SmurfGlide, SmurfTrail.
