@@ -1,0 +1,59 @@
+name: smurfx
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - cursor/**
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: smurfx
+          POSTGRES_USER: smurfx
+          POSTGRES_PASSWORD: smurfx
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U smurfx -d smurfx"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+    env:
+      DATABASE_URL: postgresql://smurfx:smurfx@localhost:5432/smurfx?schema=public
+      JWT_SECRET: ci-secret
+      NEXT_PUBLIC_SITE_URL: http://localhost:3000
+      ADMIN_EMAIL: admin@smurfx.com
+      ADMIN_PASSWORD: Admin1234!
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec prisma generate
+      - run: pnpm exec prisma db push
+      - run: pnpm --filter @smurfx/web build
+
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy over SSH
+        if: ${{ secrets.PROD_HOST != '' && secrets.PROD_USER != '' && secrets.PROD_SSH_KEY != '' }}
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: ${{ secrets.PROD_HOST }}
+          username: ${{ secrets.PROD_USER }}
+          port: ${{ secrets.PROD_PORT || '22' }}
+          key: ${{ secrets.PROD_SSH_KEY }}
+          script: |
+            cd /opt/smurfx
+            ./deploy.sh

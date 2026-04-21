@@ -1,0 +1,40 @@
+{
+  "name": "@smurfx/web",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --hostname 0.0.0.0 --port 3000",
+    "build": "next build",
+    "start": "next start --hostname 0.0.0.0 --port 3000",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.7.0",
+    "@prisma/client": "^7.7.0",
+    "@radix-ui/react-slot": "^1.2.4",
+    "@smurfx/shared": "workspace:*",
+    "bcryptjs": "^3.0.3",
+    "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
+    "framer-motion": "^12.38.0",
+    "jose": "^6.2.2",
+    "lucide-react": "^1.8.0",
+    "next": "^16.2.4",
+    "nodemailer": "^8.0.5",
+    "otplib": "^13.4.0",
+    "pg": "^8.20.0",
+    "qrcode": "^1.5.4",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "recharts": "^3.8.1",
+    "stripe": "^22.0.2",
+    "swagger-ui-react": "^5.32.4",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.2.3",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "tailwindcss": "^4.2.3"
+  }
+}
