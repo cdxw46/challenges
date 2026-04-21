@@ -1,6 +1,7 @@
-"use client";
-
+import { redirect } from "next/navigation";
 import { BarChart3, Boxes, CreditCard, PackageCheck, Shield, Users } from "lucide-react";
+
+import { getCurrentUser } from "@/lib/auth";
 
 const stats = [
   { label: "Ventas hoy", value: "€3.240", icon: CreditCard },
@@ -15,7 +16,13 @@ const alerts = [
   "Stripe y PayPal listos para activar con credenciales reales.",
 ];
 
-export default function AdminPage() {
+export default async function AdminPage() {
+  const user = await getCurrentUser();
+
+  if (!user || !["ADMIN", "SUPERADMIN"].includes(user.role)) {
+    redirect("/cuenta");
+  }
+
   return (
     <div style={{ minHeight: "100vh", background: "#0a0a0f", color: "white", padding: "40px 24px" }}>
       <div style={{ maxWidth: 1280, margin: "0 auto", display: "grid", gap: 24 }}>
