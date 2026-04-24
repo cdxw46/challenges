@@ -1,0 +1,16 @@
+{
+  "name": "NEUROVA Command Center",
+  "short_name": "NEUROVA",
+  "start_url": "/control/",
+  "display": "standalone",
+  "background_color": "#090D12",
+  "theme_color": "#090D12",
+  "description": "La ciudad piensa — Urban OS Command Center.",
+  "icons": [
+    {
+      "src": "/assets/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

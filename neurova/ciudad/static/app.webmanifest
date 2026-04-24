@@ -1,0 +1,12 @@
+{
+  "name": "NEUROVA Ciudad",
+  "short_name": "NEUROVA",
+  "start_url": "/ciudad/",
+  "display": "standalone",
+  "background_color": "#f7fbff",
+  "theme_color": "#090D12",
+  "description": "Portal ciudadano NEUROVA — la ciudad piensa.",
+  "icons": [
+    {"src": "/assets/icon.svg", "sizes": "any", "type": "image/svg+xml"}
+  ]
+}

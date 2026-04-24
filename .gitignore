@@ -1,0 +1,12 @@
+# Runtime data
+neurova/data/
+neurova/logs/
+neurova/tls/
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+# Node (temporary demo)
+node_modules/

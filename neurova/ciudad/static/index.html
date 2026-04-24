@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>NEUROVA · Ciudad</title>
+  <meta name="description" content="Portal ciudadano de NEUROVA. Tu ciudad piensa: aire, tráfico, transporte, reportes." />
+  <meta name="theme-color" content="#090D12" />
+  <link rel="manifest" href="/ciudad/app.webmanifest" />
+  <link rel="stylesheet" href="/assets/ciudad.css" />
+</head>
+<body>
+  <header class="c-header" role="banner">
+    <a href="/ciudad/" class="c-brand" aria-label="NEUROVA Ciudadanía">
+      <span class="c-logo" aria-hidden="true">◆</span>
+      <span>NEUROVA<small>ciudad</small></span>
+    </a>
+    <nav class="c-nav" aria-label="Secciones">
+      <a href="#map" class="active">Mapa</a>
+      <a href="#air">Aire</a>
+      <a href="#bus">Bus</a>
+      <a href="#report">Reporte</a>
+      <a href="#history">Histórico</a>
+    </nav>
+    <button id="installBtn" class="c-install" hidden aria-label="Instalar app">Instalar</button>
+  </header>
+
+  <main id="main" role="main">
+    <section id="map" class="c-map-section" aria-labelledby="mapTitle">
+      <h2 id="mapTitle">La ciudad ahora</h2>
+      <div class="c-map-wrap">
+        <canvas id="cityMap" aria-label="Mapa ciudadano simplificado"></canvas>
+        <div class="c-kpis" id="kpiRow" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section id="air" aria-labelledby="airTitle" class="c-section">
+      <h2 id="airTitle">Calidad del aire</h2>
+      <p>Selecciona tu barrio:</p>
+      <div class="c-chips" id="zoneChips"></div>
+      <div class="c-aqi-card" id="aqiCard" role="status"></div>
+      <canvas id="aqiChart" height="180"></canvas>
+      <p class="c-note">Datos procedentes de los sensores ambientales NEUROVA.</p>
+    </section>
+
+    <section id="bus" aria-labelledby="busTitle" class="c-section">
+      <h2 id="busTitle">Tu autobús en vivo</h2>
+      <label>Parada: <input id="stopInput" list="stopOptions" placeholder="Ej. SL001-00" /></label>
+      <datalist id="stopOptions"></datalist>
+      <div id="busETA" class="c-bus"></div>
+    </section>
+
+    <section id="report" aria-labelledby="repTitle" class="c-section">
+      <h2 id="repTitle">Reportar incidencia</h2>
+      <form id="reportForm" enctype="multipart/form-data">
+        <label>Tipo
+          <select name="type">
+            <option value="pothole">Bache</option>
+            <option value="streetlight">Farola fundida</option>
+            <option value="waste">Contenedor lleno</option>
+            <option value="graffiti">Pintadas</option>
+            <option value="other">Otro</option>
+          </select>
+        </label>
+        <label>Barrio
+          <select name="zone" id="zoneSelect"></select>
+        </label>
+        <label>Descripción
+          <textarea name="description" rows="3" required maxlength="280"></textarea>
+        </label>
+        <label>Foto (opcional)
+          <input name="photo" type="file" accept="image/*" />
+        </label>
+        <label>Ubicación
+          <button type="button" id="geoBtn">Compartir ubicación</button>
+          <input name="lat" id="latInput" type="hidden" />
+          <input name="lon" id="lonInput" type="hidden" />
+        </label>
+        <button type="submit">Enviar reporte</button>
+        <p class="c-note" id="reportStatus" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <section id="history" class="c-section" aria-labelledby="histTitle">
+      <h2 id="histTitle">Histórico de tu barrio</h2>
+      <p>Los últimos 7 días de AQI, ruido y tráfico por zona.</p>
+      <label>Zona <select id="historyZone"></select></label>
+      <label>Serie <select id="historyMetric">
+        <option value="env.pm25_ugm3">PM2.5</option>
+        <option value="env.no2_ugm3">NO2</option>
+        <option value="env.noise_db">Ruido</option>
+        <option value="traffic.flow_vph">Tráfico</option>
+      </select></label>
+      <button id="historyBtn">Consultar</button>
+      <canvas id="historyChart" height="200"></canvas>
+      <p><a href="#" id="downloadCSV">Descargar CSV de los últimos 365 días</a></p>
+    </section>
+
+    <section class="c-section" aria-labelledby="accessTitle">
+      <h2 id="accessTitle">Accesibilidad y privacidad</h2>
+      <ul>
+        <li>Contraste AA/AAA verificado. Ajusta tamaño con <kbd>Ctrl</kbd>+<kbd>+</kbd>.</li>
+        <li>Compatible con lectores de pantalla (NVDA / VoiceOver).</li>
+        <li>Sin cookies de terceros, sin trackers. Los reportes son anónimos por defecto.</li>
+        <li>Puedes instalar NEUROVA como app (PWA) para recibir notificaciones.</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="c-footer">
+    <p>NEUROVA · La ciudad piensa · <a href="/api/docs">API pública</a> · <a href="/control/">Operadores</a></p>
+  </footer>
+
+  <script type="module" src="/assets/ciudad.js"></script>
+</body>
+</html>
