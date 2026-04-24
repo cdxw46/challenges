@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NEUROVA Ciudad</title>
+  <meta name="theme-color" content="#090D12" />
+  <style>
+    :root {
+      --bg: #090d12;
+      --panel: #101821;
+      --panel-2: #0d131b;
+      --line: rgba(14, 165, 255, 0.18);
+      --text: #e8fff3;
+      --muted: #8bb9cf;
+      --green: #00ff87;
+      --blue: #0ea5ff;
+      --amber: #ffb300;
+      --red: #ff3b3b;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; background: radial-gradient(circle at top, #122334 0%, var(--bg) 48%); color: var(--text); font-family: Inter, system-ui, sans-serif; }
+    body { padding: 18px; }
+    .wrap { max-width: 1220px; margin: 0 auto; }
+    .hero {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .card {
+      background: linear-gradient(180deg, rgba(16,24,33,.96), rgba(9,13,18,.96));
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: 0 24px 60px rgba(0,0,0,.3);
+    }
+    .hero-main {
+      padding: 22px;
+      min-height: 260px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: clamp(2rem, 6vw, 3.6rem);
+      line-height: 0.92;
+      letter-spacing: -.04em;
+    }
+    .claim { color: var(--green); font-weight: 700; margin-bottom: 12px; }
+    .sub { color: var(--muted); max-width: 52ch; line-height: 1.6; }
+    .hero-side {
+      padding: 18px;
+      display: grid;
+      gap: 12px;
+    }
+    .chip-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 10px;
+    }
+    .chip {
+      background: rgba(14,165,255,0.08);
+      border: 1px solid rgba(14,165,255,0.18);
+      border-radius: 14px;
+      padding: 12px;
+    }
+    .chip b { display:block; font-size:1.15rem; color: var(--green); margin-top: 4px; }
+    .grid {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 16px;
+    }
+    .section { padding: 18px; }
+    .section h2 { margin: 0 0 12px; font-size: 1.02rem; letter-spacing: .08em; text-transform: uppercase; color: var(--green); }
+    #map {
+      width: 100%;
+      height: 420px;
+      border-radius: 14px;
+      display: block;
+      background: linear-gradient(180deg, rgba(8,17,24,.95), rgba(6,10,14,.95));
+    }
+    .legend { display:flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .legend span {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 6px 10px;
+      color: var(--muted);
+      font-size: .83rem;
+      background: rgba(255,255,255,0.02);
+    }
+    .alerts, .etas, .reports { display:grid; gap:10px; max-height: 420px; overflow:auto; }
+    .item {
+      padding: 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.02);
+      border: 1px solid rgba(255,255,255,.06);
+    }
+    .item strong { display:block; margin-bottom:4px; }
+    .sev-critical { border-color: rgba(255,59,59,.4); box-shadow: inset 0 0 0 1px rgba(255,59,59,.12); }
+    .sev-high { border-color: rgba(255,179,0,.4); }
+    .sev-medium { border-color: rgba(14,165,255,.25); }
+    form {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    input, textarea, select, button {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(8,12,18,.92);
+      color: var(--text);
+      padding: 12px 14px;
+      font: inherit;
+    }
+    textarea { min-height: 120px; resize: vertical; }
+    button {
+      cursor: pointer;
+      font-weight: 700;
+      border-color: rgba(0,255,135,.28);
+      background: linear-gradient(90deg, rgba(0,255,135,.18), rgba(14,165,255,.18));
+    }
+    .muted { color: var(--muted); font-size: .92rem; }
+    .row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .a11y {
+      display:flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+    .a11y button { width: auto; padding: 10px 14px; }
+    .high-contrast {
+      --bg: #000;
+      --panel: #000;
+      --panel-2: #000;
+      --line: rgba(255,255,255,.3);
+      --text: #fff;
+      --muted: #d9e7ef;
+    }
+    @media (max-width: 980px) {
+      .hero, .grid, .row-2 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <article class="hero-main card" aria-labelledby="titulo">
+        <div>
+          <div class="claim">NEUROVA CIUDAD</div>
+          <h1 id="titulo">La ciudad piensa.</h1>
+          <p class="sub">Consulta trafico, calidad del aire, transporte en vivo y alertas de tu barrio. Sin rastreo, sin terceros, con datos operativos del sistema urbano en tiempo real.</p>
+        </div>
+        <div class="a11y">
+          <button id="toggleContrast" type="button">Alto contraste</button>
+          <button id="textPlus" type="button">Texto +</button>
+          <button id="textMinus" type="button">Texto -</button>
+        </div>
+      </article>
+      <aside class="hero-side card">
+        <div class="chip-grid">
+          <div class="chip">AQI barrio<b id="aqiNow">--</b></div>
+          <div class="chip">Alertas activas<b id="alertCount">--</b></div>
+          <div class="chip">Velocidad ciudad<b id="speedNow">--</b></div>
+          <div class="chip">Energia renovable<b id="renewableNow">--</b></div>
+        </div>
+        <div class="muted">Disponible como PWA en despliegues productivos con HTTPS y service worker. Esta entrega deja la base operativa del portal y sus APIs listas para evolucionar.</div>
+      </aside>
+    </section>
+
+    <section class="grid">
+      <article class="card section">
+        <h2>Mapa publico</h2>
+        <canvas id="map" width="900" height="420" aria-label="Mapa publico de la ciudad"></canvas>
+        <div class="legend">
+          <span>Verde: trafico fluido</span>
+          <span>Azul: transporte</span>
+          <span>Ambar: alerta</span>
+          <span>Rojo: saturacion</span>
+        </div>
+      </article>
+
+      <aside class="card section">
+        <h2>Avisos y proximos buses</h2>
+        <div class="alerts" id="alerts"></div>
+        <h2 style="margin-top:16px;">Llegadas</h2>
+        <div class="etas" id="etas"></div>
+      </aside>
+    </section>
+
+    <section class="row-2">
+      <article class="card section">
+        <h2>Reporta una incidencia</h2>
+        <p class="muted">Tu aviso entra directamente en la cola operativa de NEUROVA.</p>
+        <form id="reportForm">
+          <select id="reportZone" aria-label="Barrio">
+            <option value="central">Centro</option>
+            <option value="north">Norte</option>
+            <option value="south">Sur</option>
+            <option value="east">Este</option>
+            <option value="west">Oeste</option>
+            <option value="industrial">Industrial</option>
+            <option value="harbor">Puerto</option>
+            <option value="campus">Campus</option>
+          </select>
+          <select id="reportKind" aria-label="Tipo de incidencia">
+            <option value="bache">Bache</option>
+            <option value="farola">Farola fundida</option>
+            <option value="contenedor">Contenedor lleno</option>
+            <option value="agua">Fuga de agua</option>
+            <option value="transporte">Incidencia de transporte</option>
+          </select>
+          <textarea id="reportDescription" placeholder="Describe la incidencia"></textarea>
+          <button type="submit">Enviar reporte</button>
+        </form>
+        <div id="reportStatus" class="muted" aria-live="polite"></div>
+      </article>
+
+      <article class="card section">
+        <h2>Mis reportes recientes</h2>
+        <div class="reports" id="reports"></div>
+      </article>
+    </section>
+  </div>
+
+  <script>
+    const state = {
+      overview: null,
+      mapData: null,
+      fontScale: 1,
+    };
+
+    function fmt(v, digits = 0) {
+      return Number(v ?? 0).toLocaleString("es-ES", { maximumFractionDigits: digits, minimumFractionDigits: digits });
+    }
+
+    async function fetchJson(url, options) {
+      const res = await fetch(url, options);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.json();
+    }
+
+    async function loadOverview() {
+      const [{ data: overview }, { data: mapData }, { data: reports }] = await Promise.all([
+        fetchJson("/api/public/overview"),
+        fetchJson("/api/map"),
+        fetchJson("/api/reports")
+      ]);
+
+      state.overview = overview;
+      state.mapData = mapData;
+
+      document.getElementById("aqiNow").textContent = fmt(overview.kpis.air_quality_index, 0);
+      document.getElementById("alertCount").textContent = fmt(overview.kpis.active_alerts, 0);
+      document.getElementById("speedNow").textContent = `${fmt(overview.kpis.city_speed_avg, 1)} km/h`;
+      document.getElementById("renewableNow").textContent = `${fmt(overview.kpis.renewable_share * 100, 0)} %`;
+
+      renderAlerts(overview.alerts);
+      renderEtas(overview.stops);
+      renderReports(reports);
+      drawMap();
+    }
+
+    function renderAlerts(alerts) {
+      const el = document.getElementById("alerts");
+      el.innerHTML = "";
+      (alerts || []).slice(0, 8).forEach(alert => {
+        const div = document.createElement("article");
+        div.className = `item sev-${alert.severity || "medium"}`;
+        div.innerHTML = `<strong>${alert.title}</strong><div>${alert.description}</div><div class="muted">${alert.zone} · ${new Date(alert.timestamp).toLocaleTimeString("es-ES")}</div>`;
+        el.appendChild(div);
+      });
+      if (!el.children.length) el.innerHTML = `<div class="muted">Sin alertas activas.</div>`;
+    }
+
+    function renderEtas(etas) {
+      const el = document.getElementById("etas");
+      el.innerHTML = "";
+      (etas || []).forEach(stop => {
+        const div = document.createElement("article");
+        div.className = "item";
+        div.innerHTML = `<strong>${stop.line} · ${stop.stop}</strong><div>Llega en ${fmt(stop.minutes)} min · ocupacion ${fmt(stop.occupancy * 100, 0)} %</div>`;
+        el.appendChild(div);
+      });
+    }
+
+    function renderReports(reports) {
+      const el = document.getElementById("reports");
+      el.innerHTML = "";
+      (reports || []).slice(0, 10).forEach(report => {
+        const div = document.createElement("article");
+        div.className = "item";
+        div.innerHTML = `<strong>${report.kind} · ${report.zone}</strong><div>${report.description}</div><div class="muted">${report.status}</div>`;
+        el.appendChild(div);
+      });
+      if (!el.children.length) el.innerHTML = `<div class="muted">Aun no hay reportes enviados.</div>`;
+    }
+
+    function drawMap() {
+      const canvas = document.getElementById("map");
+      const ctx = canvas.getContext("2d");
+      const w = canvas.width;
+      const h = canvas.height;
+
+      ctx.clearRect(0, 0, w, h);
+      ctx.fillStyle = "#081119";
+      ctx.fillRect(0, 0, w, h);
+
+      const topology = state.mapData?.topology;
+      const sensors = state.mapData?.sensors || [];
+      if (!topology) return;
+
+      const sx = x => (x / 100) * w;
+      const sy = y => h - (y / 100) * h;
+
+      ctx.strokeStyle = "rgba(14,165,255,.22)";
+      ctx.lineWidth = 2;
+      for (const road of topology.roads) {
+        ctx.beginPath();
+        road.points.forEach((point, idx) => idx ? ctx.lineTo(sx(point[0]), sy(point[1])) : ctx.moveTo(sx(point[0]), sy(point[1])));
+        ctx.stroke();
+      }
+
+      for (const district of topology.districts) {
+        ctx.beginPath();
+        district.polygon.forEach((point, idx) => idx ? ctx.lineTo(sx(point[0]), sy(point[1])) : ctx.moveTo(sx(point[0]), sy(point[1])));
+        ctx.closePath();
+        ctx.fillStyle = "rgba(255,255,255,.02)";
+        ctx.strokeStyle = "rgba(255,255,255,.08)";
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = "#8bb9cf";
+        ctx.font = "12px ui-monospace, monospace";
+        ctx.fillText(district.name, sx(district.centroid[0]) - 30, sy(district.centroid[1]));
+      }
+
+      sensors.slice(0, 420).forEach(sensor => {
+        const x = sx(sensor.location?.lon ?? 50);
+        const y = sy(sensor.location?.lat ?? 50);
+        let color = "#0ea5ff";
+        if (sensor.sensor_type === "traffic") {
+          const speed = sensor.metrics?.avg_speed ?? 0;
+          color = speed < 28 ? "#ff3b3b" : speed < 42 ? "#ffb300" : "#00ff87";
+        } else if (sensor.sensor_type === "environment") {
+          color = "#ffb300";
+        } else if (sensor.sensor_type === "transport") {
+          color = "#0ea5ff";
+        }
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(x, y, sensor.sensor_type === "traffic" ? 3 : 2.4, 0, Math.PI * 2);
+        ctx.fill();
+      });
+    }
+
+    document.getElementById("reportForm").addEventListener("submit", async event => {
+      event.preventDefault();
+      const payload = {
+        id: "",
+        timestamp: 0,
+        zone: document.getElementById("reportZone").value,
+        kind: document.getElementById("reportKind").value,
+        description: document.getElementById("reportDescription").value.trim(),
+        lat: 40 + Math.random() * 10,
+        lon: 40 + Math.random() * 10,
+        status: ""
+      };
+      const status = document.getElementById("reportStatus");
+      status.textContent = "Enviando...";
+      try {
+        await fetchJson("/api/reports", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        document.getElementById("reportDescription").value = "";
+        status.textContent = "Reporte enviado a NEUROVA.";
+        await loadOverview();
+      } catch (error) {
+        status.textContent = `Error al enviar: ${error.message}`;
+      }
+    });
+
+    document.getElementById("toggleContrast").addEventListener("click", () => {
+      document.body.classList.toggle("high-contrast");
+    });
+    document.getElementById("textPlus").addEventListener("click", () => {
+      state.fontScale = Math.min(1.4, state.fontScale + 0.1);
+      document.documentElement.style.fontSize = `${state.fontScale}rem`;
+    });
+    document.getElementById("textMinus").addEventListener("click", () => {
+      state.fontScale = Math.max(0.85, state.fontScale - 0.1);
+      document.documentElement.style.fontSize = `${state.fontScale}rem`;
+    });
+
+    loadOverview();
+    setInterval(loadOverview, 10000);
+  </script>
+</body>
+</html>

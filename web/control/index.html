@@ -1,0 +1,985 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NEUROVA Control</title>
+  <style>
+    :root {
+      --bg: #090d12;
+      --bg-2: #0d141c;
+      --card: rgba(13, 20, 28, 0.92);
+      --line: rgba(14, 165, 255, 0.18);
+      --text: #d9fff0;
+      --muted: #83a7bb;
+      --green: #00ff87;
+      --blue: #0ea5ff;
+      --amber: #ffb300;
+      --red: #ff3b3b;
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background:
+        radial-gradient(circle at top left, rgba(14,165,255,0.12), transparent 32%),
+        radial-gradient(circle at top right, rgba(0,255,135,0.1), transparent 28%),
+        linear-gradient(180deg, #06080d 0%, var(--bg) 100%);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+    }
+
+    body {
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+      padding: 18px 24px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      background: rgba(4, 8, 12, 0.92);
+      backdrop-filter: blur(18px);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 1.25rem;
+      letter-spacing: 0.18em;
+      color: var(--green);
+    }
+
+    .brand span {
+      color: var(--muted);
+      font-size: 0.83rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .status-pill {
+      border: 1px solid rgba(0,255,135,0.25);
+      color: var(--green);
+      background: rgba(0,255,135,0.08);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.83rem;
+    }
+
+    .login-box {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .login-box input, .login-box button, .command-form select, .command-form input, .report-form input, .report-form textarea, .report-form button {
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      padding: 10px 12px;
+      font: inherit;
+    }
+
+    .login-box button,
+    .command-form button,
+    .report-form button {
+      cursor: pointer;
+      background: linear-gradient(135deg, rgba(0,255,135,0.18), rgba(14,165,255,0.18));
+      border-color: rgba(0,255,135,0.22);
+      font-weight: 700;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: 320px minmax(0, 1fr) 360px;
+      gap: 18px;
+      padding: 18px;
+      min-height: 0;
+    }
+
+    aside, section, .panel {
+      min-height: 0;
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.02);
+    }
+
+    .panel-header h2, .panel-header h3 {
+      margin: 0;
+      font-size: 0.92rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .scroll {
+      overflow: auto;
+      max-height: calc(100vh - 170px);
+    }
+
+    .left-column, .right-column {
+      display: grid;
+      gap: 18px;
+      align-content: start;
+    }
+
+    .kpis {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      padding: 14px;
+    }
+
+    .kpi {
+      padding: 14px;
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 14px;
+    }
+
+    .kpi label {
+      display: block;
+      color: var(--muted);
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+    }
+
+    .kpi strong {
+      display: block;
+      font-size: 1.6rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+
+    .kpi small {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+    }
+
+    .map-shell {
+      display: grid;
+      grid-template-rows: auto auto 1fr auto;
+      height: calc(100vh - 110px);
+    }
+
+    .map-toolbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .map-toolbar button {
+      border: 1px solid rgba(255,255,255,0.07);
+      background: rgba(255,255,255,0.03);
+      color: var(--text);
+      padding: 8px 10px;
+      border-radius: 999px;
+      cursor: pointer;
+      font: inherit;
+    }
+
+    .map-toolbar button.active {
+      border-color: rgba(0,255,135,0.35);
+      color: var(--green);
+      background: rgba(0,255,135,0.08);
+    }
+
+    .map-legend {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      padding: 10px 16px;
+      font-size: 0.84rem;
+      color: var(--muted);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .swatch {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .canvas-wrap {
+      position: relative;
+      padding: 12px;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      min-height: 520px;
+      display: block;
+      border-radius: 18px;
+      background:
+        linear-gradient(rgba(14,165,255,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(14,165,255,0.05) 1px, transparent 1px),
+        radial-gradient(circle at center, rgba(0,255,135,0.05), rgba(9,13,18,0.92));
+      background-size: 32px 32px, 32px 32px, auto;
+      border: 1px solid rgba(14,165,255,0.08);
+    }
+
+    .map-hover {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      min-width: 260px;
+      max-width: 340px;
+      background: rgba(9,13,18,0.92);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 14px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      display: none;
+    }
+
+    .map-hover.visible {
+      display: block;
+    }
+
+    .map-hover h3 {
+      margin: 0 0 8px;
+      color: var(--green);
+      font-size: 1rem;
+    }
+
+    .map-hover dl {
+      margin: 0;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 6px 10px;
+      font-size: 0.84rem;
+    }
+
+    .map-hover dt {
+      color: var(--muted);
+    }
+
+    .map-footer {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      padding: 12px 16px 16px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .stat-box {
+      padding: 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .stat-box label {
+      color: var(--muted);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .stat-box strong {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 1.1rem;
+    }
+
+    .events, .alerts, .decisions {
+      display: grid;
+      gap: 10px;
+      padding: 14px;
+    }
+
+    .event-card {
+      padding: 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.025);
+      border-left: 3px solid var(--blue);
+      border-top: 1px solid rgba(255,255,255,0.05);
+      border-right: 1px solid rgba(255,255,255,0.05);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      font-size: 0.9rem;
+    }
+
+    .event-card.critical {
+      border-left-color: var(--red);
+    }
+
+    .event-card.high {
+      border-left-color: var(--amber);
+    }
+
+    .event-card small {
+      display: block;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    .event-card code {
+      color: var(--green);
+      font-size: 0.82rem;
+    }
+
+    .command-form, .report-form {
+      display: grid;
+      gap: 10px;
+      padding: 14px;
+    }
+
+    .command-form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+
+    @media (max-width: 1320px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+      .map-shell {
+        height: auto;
+      }
+      .scroll {
+        max-height: none;
+      }
+      .map-footer {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <h1>NEUROVA / CONTROL</h1>
+      <span>La ciudad piensa</span>
+    </div>
+    <div class="header-right">
+      <div class="status-pill" id="runtimeStatus">runtime: booting</div>
+      <div class="status-pill" id="sessionStatus">session: offline</div>
+      <div class="login-box">
+        <input id="email" type="email" value="admin@neurova.city" aria-label="email" />
+        <input id="password" type="password" value="Neurova2025!" aria-label="password" />
+        <button id="loginButton">Login</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <aside class="left-column">
+      <div class="panel">
+        <div class="panel-header"><h2>KPIs en tiempo real</h2></div>
+        <div class="kpis scroll" id="kpiList"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header"><h2>Override manual</h2></div>
+        <form class="command-form" id="commandForm">
+          <div class="command-form-grid">
+            <select id="commandAction">
+              <option value="signal.override">Cambiar semaforo</option>
+              <option value="energy.redispatch">Redistribuir energia</option>
+              <option value="water.reserve.activate">Activar bomba reserva</option>
+              <option value="citizen.alert.publish">Publicar alerta ciudadana</option>
+            </select>
+            <select id="commandZone">
+              <option value="central">central</option>
+              <option value="north">north</option>
+              <option value="south">south</option>
+              <option value="east">east</option>
+              <option value="west">west</option>
+              <option value="industrial">industrial</option>
+              <option value="harbor">harbor</option>
+              <option value="campus">campus</option>
+            </select>
+          </div>
+          <input id="commandValue" placeholder="Valor opcional" />
+          <button type="submit">Ejecutar comando</button>
+          <div class="muted mono" id="commandResult">esperando sesión</div>
+        </form>
+      </div>
+    </aside>
+
+    <section class="panel">
+      <div class="map-shell">
+        <div class="panel-header">
+          <h2>Mapa operacional vectorial</h2>
+          <span class="muted mono" id="sensorCount">0 sensores</span>
+        </div>
+        <div class="map-toolbar" id="layerBar"></div>
+        <div class="map-legend">
+          <span class="legend-item"><span class="swatch" style="background:#0EA5FF"></span>trafico</span>
+          <span class="legend-item"><span class="swatch" style="background:#00FF87"></span>medioambiente</span>
+          <span class="legend-item"><span class="swatch" style="background:#FFB300"></span>energia</span>
+          <span class="legend-item"><span class="swatch" style="background:#FF3B3B"></span>alertas</span>
+        </div>
+        <div class="canvas-wrap">
+          <canvas id="mapCanvas" width="1200" height="720"></canvas>
+          <div class="map-hover" id="mapHover"></div>
+        </div>
+        <div class="map-footer">
+          <div class="stat-box"><label>Alertas activas</label><strong id="footerAlerts">0</strong></div>
+          <div class="stat-box"><label>Decisiones auditadas</label><strong id="footerDecisions">0</strong></div>
+          <div class="stat-box"><label>Rutas de residuos</label><strong id="footerRoutes">0</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="right-column">
+      <div class="panel">
+        <div class="panel-header"><h3>Feed de eventos</h3></div>
+        <div class="events scroll" id="eventFeed"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header"><h3>Alertas y decisiones</h3></div>
+        <div class="alerts scroll" id="alertFeed"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header"><h3>Reporte ciudadano rápido</h3></div>
+        <form class="report-form" id="reportForm">
+          <input id="reportZone" placeholder="Zona" value="central" />
+          <input id="reportKind" placeholder="Tipo" value="farola" />
+          <input id="reportLat" placeholder="Lat" value="51.4" />
+          <input id="reportLon" placeholder="Lon" value="50.3" />
+          <textarea id="reportDescription" rows="4" placeholder="Descripción">Farola sin servicio en acceso principal.</textarea>
+          <button type="submit">Crear reporte</button>
+          <div class="muted mono" id="reportResult">sin enviar</div>
+        </form>
+      </div>
+    </aside>
+  </main>
+
+  <script>
+    const state = {
+      token: localStorage.getItem("neurova_token") || "",
+      map: null,
+      kpis: null,
+      alerts: [],
+      decisions: [],
+      routes: [],
+      events: [],
+      hovered: null,
+      layers: {
+        traffic: true,
+        environment: true,
+        energy: true,
+        water: true,
+        waste: true,
+        transport: true,
+      },
+    };
+
+    const els = {
+      runtimeStatus: document.getElementById("runtimeStatus"),
+      sessionStatus: document.getElementById("sessionStatus"),
+      kpiList: document.getElementById("kpiList"),
+      eventFeed: document.getElementById("eventFeed"),
+      alertFeed: document.getElementById("alertFeed"),
+      mapCanvas: document.getElementById("mapCanvas"),
+      mapHover: document.getElementById("mapHover"),
+      sensorCount: document.getElementById("sensorCount"),
+      footerAlerts: document.getElementById("footerAlerts"),
+      footerDecisions: document.getElementById("footerDecisions"),
+      footerRoutes: document.getElementById("footerRoutes"),
+      layerBar: document.getElementById("layerBar"),
+      commandResult: document.getElementById("commandResult"),
+      reportResult: document.getElementById("reportResult"),
+    };
+
+    const layerLabels = {
+      traffic: "trafico",
+      environment: "medioambiente",
+      energy: "energia",
+      water: "agua",
+      waste: "residuos",
+      transport: "transporte",
+    };
+
+    function fmt(value, digits = 1) {
+      return Number(value || 0).toLocaleString("es-ES", { maximumFractionDigits: digits, minimumFractionDigits: digits });
+    }
+
+    function fmtInt(value) {
+      return Number(value || 0).toLocaleString("es-ES", { maximumFractionDigits: 0 });
+    }
+
+    function severityClass(severity) {
+      return severity === "critical" ? "critical" : severity === "high" ? "high" : "";
+    }
+
+    function renderLayers() {
+      els.layerBar.innerHTML = "";
+      Object.entries(layerLabels).forEach(([key, label]) => {
+        const btn = document.createElement("button");
+        btn.textContent = label;
+        btn.className = state.layers[key] ? "active" : "";
+        btn.onclick = () => {
+          state.layers[key] = !state.layers[key];
+          renderLayers();
+          drawMap();
+        };
+        els.layerBar.appendChild(btn);
+      });
+    }
+
+    function renderKpis() {
+      const kpis = state.kpis || {};
+      const cards = [
+        ["Vehículos", fmtInt(kpis.vehicles_now)],
+        ["Velocidad media", `${fmt(kpis.city_speed_avg)} km/h`],
+        ["Congestión", `${fmt(kpis.congestion_index)} / 100`],
+        ["AQI", fmt(kpis.air_quality_index)],
+        ["Demanda energía", `${fmt(kpis.energy_demand_kw)} kW`],
+        ["Renovable", `${fmt((kpis.renewable_share || 0) * 100)} %`],
+        ["Transporte ocupación", `${fmt((kpis.transport_occupancy || 0) * 100)} %`],
+        ["Depósitos agua", `${fmt(kpis.water_reservoir_level)} %`],
+        ["Alertas activas", fmtInt(kpis.active_alerts)],
+        ["Emergencias", fmtInt(kpis.emergency_units)],
+      ];
+      els.kpiList.innerHTML = cards.map(([label, value]) => `
+        <div class="kpi">
+          <label>${label}</label>
+          <strong>${value}</strong>
+          <small>Actualización en vivo desde el bus de eventos.</small>
+        </div>
+      `).join("");
+    }
+
+    function renderEvents() {
+      els.eventFeed.innerHTML = state.events.slice(0, 40).map((event) => `
+        <div class="event-card">
+          <div><strong>${event.topic}</strong></div>
+          <div class="mono">${event.payload?.source_id || "-"}</div>
+          <small>${new Date(event.ingested_at).toLocaleTimeString("es-ES")} · ${event.payload?.zone || "-"} · p${event.partition} o${event.offset}</small>
+        </div>
+      `).join("") || `<div class="event-card"><strong>Sin eventos aún</strong><small>Esperando datos del broker.</small></div>`;
+    }
+
+    function renderAlerts() {
+      const merged = [
+        ...state.alerts.map(a => ({ type: "alert", severity: a.severity, title: a.title, body: a.description, meta: `${a.zone} · ${new Date(a.timestamp).toLocaleTimeString("es-ES")}` })),
+        ...state.decisions.map(d => ({ type: "decision", severity: "medium", title: d.action, body: `actor=${d.actor_type} status=${d.status}`, meta: `${d.zone} · ${new Date(d.timestamp).toLocaleTimeString("es-ES")}` })),
+      ].slice(0, 32);
+
+      els.alertFeed.innerHTML = merged.map((item) => `
+        <div class="event-card ${severityClass(item.severity)}">
+          <div><strong>${item.type === "alert" ? "Alerta" : "Decisión"}</strong> · ${item.title}</div>
+          <div>${item.body}</div>
+          <small>${item.meta}</small>
+        </div>
+      `).join("") || `<div class="event-card"><strong>Sin alertas</strong><small>La automatización todavía no ha disparado eventos.</small></div>`;
+
+      els.footerAlerts.textContent = String(state.alerts.length);
+      els.footerDecisions.textContent = String(state.decisions.length);
+      els.footerRoutes.textContent = String(state.routes.length);
+    }
+
+    function colorFor(sensorType, metrics = {}) {
+      if (sensorType === "traffic") return "#0EA5FF";
+      if (sensorType === "environment") return metrics.co2 > 600 ? "#FFB300" : "#00FF87";
+      if (sensorType === "energy") return "#FFB300";
+      if (sensorType === "water") return "#40c4ff";
+      if (sensorType === "waste") return "#c084fc";
+      if (sensorType === "transport") return "#00FF87";
+      return "#d9fff0";
+    }
+
+    function project(point, canvas) {
+      return {
+        x: (point[0] / 100) * canvas.width,
+        y: canvas.height - (point[1] / 100) * canvas.height,
+      };
+    }
+
+    function roadTrafficIntensity(road) {
+      if (!state.map?.sensors?.length) return 0.3;
+      const traffic = state.map.sensors.filter(sensor => sensor.sensor_type === "traffic");
+      if (!traffic.length) return 0.3;
+      let total = 0;
+      for (const sensor of traffic) {
+        total += sensor.metrics?.vehicle_count || 0;
+      }
+      return Math.min(1, total / (traffic.length * 100));
+    }
+
+    function drawMap() {
+      const canvas = els.mapCanvas;
+      const ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      if (!state.map) return;
+
+      ctx.save();
+      ctx.fillStyle = "rgba(9,13,18,0.94)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      for (let x = 0; x <= canvas.width; x += 64) {
+        ctx.strokeStyle = "rgba(14,165,255,0.05)";
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, canvas.height);
+        ctx.stroke();
+      }
+      for (let y = 0; y <= canvas.height; y += 64) {
+        ctx.strokeStyle = "rgba(14,165,255,0.05)";
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+      }
+
+      for (const district of state.map.topology.districts) {
+        ctx.beginPath();
+        district.polygon.forEach((point, idx) => {
+          const p = project(point, canvas);
+          if (idx === 0) ctx.moveTo(p.x, p.y);
+          else ctx.lineTo(p.x, p.y);
+        });
+        ctx.closePath();
+        ctx.fillStyle = state.hovered?.kind === "district" && state.hovered?.id === district.id
+          ? "rgba(0,255,135,0.12)"
+          : "rgba(14,165,255,0.06)";
+        ctx.strokeStyle = "rgba(14,165,255,0.18)";
+        ctx.lineWidth = 1.4;
+        ctx.fill();
+        ctx.stroke();
+        const c = project(district.centroid, canvas);
+        ctx.fillStyle = "#9fd2e9";
+        ctx.font = "13px ui-monospace, monospace";
+        ctx.fillText(district.name, c.x - 34, c.y);
+      }
+
+      for (const road of state.map.topology.roads) {
+        const intensity = roadTrafficIntensity(road);
+        ctx.beginPath();
+        road.points.forEach((point, idx) => {
+          const p = project(point, canvas);
+          if (idx === 0) ctx.moveTo(p.x, p.y);
+          else ctx.lineTo(p.x, p.y);
+        });
+        ctx.strokeStyle = `rgba(14,165,255,${0.18 + intensity * 0.6})`;
+        ctx.lineWidth = 2 + road.lane_count * 0.7;
+        ctx.stroke();
+      }
+
+      for (const asset of state.map.topology.public_assets) {
+        const p = project(asset.position, canvas);
+        ctx.fillStyle = asset.kind === "emergency" ? "#FF3B3B" : asset.kind === "energy" ? "#FFB300" : "#00FF87";
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 7, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      for (const route of state.routes) {
+        if (!route.path?.length) continue;
+        ctx.beginPath();
+        route.path.forEach((point, idx) => {
+          const p = project(point, canvas);
+          if (idx === 0) ctx.moveTo(p.x, p.y);
+          else ctx.lineTo(p.x, p.y);
+        });
+        ctx.strokeStyle = "rgba(255,179,0,0.72)";
+        ctx.setLineDash([10, 6]);
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+
+      const visibleSensors = state.map.sensors.filter(sensor => state.layers[sensor.sensor_type] !== false);
+      visibleSensors.forEach(sensor => {
+        const pos = project([sensor.location?.lon || 50, sensor.location?.lat || 50], canvas);
+        const pulse = 3 + ((Date.now() / 200 + pos.x) % 6);
+        ctx.fillStyle = colorFor(sensor.sensor_type, sensor.metrics);
+        ctx.globalAlpha = 0.16;
+        ctx.beginPath();
+        ctx.arc(pos.x, pos.y, pulse * 2.4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+        ctx.beginPath();
+        ctx.arc(pos.x, pos.y, 4.5, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      ctx.restore();
+      els.sensorCount.textContent = `${visibleSensors.length} sensores renderizados`;
+    }
+
+    function nearestHover(event) {
+      if (!state.map) return null;
+      const rect = els.mapCanvas.getBoundingClientRect();
+      const scaleX = els.mapCanvas.width / rect.width;
+      const scaleY = els.mapCanvas.height / rect.height;
+      const x = (event.clientX - rect.left) * scaleX;
+      const y = (event.clientY - rect.top) * scaleY;
+      let closest = null;
+      let bestDistance = Infinity;
+
+      for (const sensor of state.map.sensors || []) {
+        if (state.layers[sensor.sensor_type] === false) continue;
+        const p = project([sensor.location?.lon || 50, sensor.location?.lat || 50], els.mapCanvas);
+        const d = Math.hypot(p.x - x, p.y - y);
+        if (d < bestDistance) {
+          bestDistance = d;
+          closest = { kind: "sensor", sensor, x: p.x, y: p.y };
+        }
+      }
+
+      for (const district of state.map.topology.districts || []) {
+        const p = project(district.centroid, els.mapCanvas);
+        const d = Math.hypot(p.x - x, p.y - y);
+        if (d < bestDistance) {
+          bestDistance = d;
+          closest = { kind: "district", id: district.id, district, x: p.x, y: p.y };
+        }
+      }
+
+      return bestDistance < 28 ? closest : null;
+    }
+
+    function renderHover() {
+      if (!state.hovered) {
+        els.mapHover.classList.remove("visible");
+        return;
+      }
+      els.mapHover.classList.add("visible");
+      if (state.hovered.kind === "sensor") {
+        const sensor = state.hovered.sensor;
+        const metrics = Object.entries(sensor.metrics || {}).slice(0, 6).map(([k, v]) => `<dt>${k}</dt><dd>${fmt(v)}</dd>`).join("");
+        els.mapHover.innerHTML = `
+          <h3>${sensor.sensor_type.toUpperCase()} · ${sensor.zone}</h3>
+          <dl>
+            <dt>source</dt><dd>${sensor.source_id}</dd>
+            <dt>topic</dt><dd>${sensor.topic || `${sensor.sensor_type}.${sensor.zone}`}</dd>
+            <dt>lat</dt><dd>${fmt(sensor.location?.lat || 0, 3)}</dd>
+            <dt>lon</dt><dd>${fmt(sensor.location?.lon || 0, 3)}</dd>
+            ${metrics}
+          </dl>
+        `;
+      } else {
+        const district = state.hovered.district;
+        els.mapHover.innerHTML = `
+          <h3>${district.name}</h3>
+          <dl>
+            <dt>zona</dt><dd>${district.id}</dd>
+            <dt>centroide</dt><dd>${district.centroid.join(", ")}</dd>
+            <dt>alertas</dt><dd>${state.alerts.filter(a => a.zone === district.id).length}</dd>
+            <dt>rutas</dt><dd>${state.routes.filter(r => r.zone === district.id).length}</dd>
+          </dl>
+        `;
+      }
+    }
+
+    async function fetchJson(url, options = {}) {
+      const response = await fetch(url, options);
+      if (!response.ok) throw new Error(`${response.status} ${url}`);
+      return response.json();
+    }
+
+    async function refreshHealth() {
+      try {
+        const data = await fetchJson("/api/health");
+        els.runtimeStatus.textContent = `runtime: ${data.data.status} | http ${data.data.listeners.http} | mqtt ${data.data.listeners.mqtt}`;
+      } catch (error) {
+        els.runtimeStatus.textContent = `runtime: degraded`;
+      }
+    }
+
+    async function refreshKpis() {
+      const payload = await fetchJson("/api/kpis");
+      state.kpis = payload.data;
+      renderKpis();
+    }
+
+    async function refreshMap() {
+      const payload = await fetchJson("/api/map");
+      state.map = payload.data;
+      state.routes = Object.values(payload.data.routes || {});
+      drawMap();
+      renderAlerts();
+    }
+
+    async function refreshAlerts() {
+      const [alerts, decisions, events] = await Promise.all([
+        fetchJson("/api/alerts"),
+        fetchJson("/api/decisions"),
+        fetchJson("/api/events?limit=50"),
+      ]);
+      state.alerts = alerts.data || [];
+      state.decisions = decisions.data || [];
+      state.events = events.data || [];
+      renderAlerts();
+      renderEvents();
+    }
+
+    function connectEvents() {
+      const wsProto = location.protocol === "https:" ? "wss" : "ws";
+      const socket = new WebSocket(`${wsProto}://${location.host}/api/ws`);
+      socket.onmessage = (event) => {
+        try {
+          const record = JSON.parse(event.data);
+          state.events.unshift(record);
+          state.events = state.events.slice(0, 60);
+          renderEvents();
+        } catch (_) {}
+      };
+      socket.onclose = () => setTimeout(connectEvents, 1500);
+    }
+
+    async function login() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      try {
+        const payload = await fetchJson("/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        });
+        state.token = payload.data.token;
+        localStorage.setItem("neurova_token", state.token);
+        els.sessionStatus.textContent = `session: ${payload.data.user}`;
+      } catch (error) {
+        els.sessionStatus.textContent = "session: failed";
+      }
+    }
+
+    async function sendCommand(event) {
+      event.preventDefault();
+      if (!state.token) {
+        els.commandResult.textContent = "login requerido";
+        return;
+      }
+      const action = document.getElementById("commandAction").value;
+      const zone = document.getElementById("commandZone").value;
+      const value = document.getElementById("commandValue").value;
+      try {
+        const payload = await fetchJson("/api/control/command", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${state.token}`,
+          },
+          body: JSON.stringify({ action, zone, value }),
+        });
+        els.commandResult.textContent = `ok ${payload.data.decision.decision_id}`;
+        await refreshAlerts();
+      } catch (error) {
+        els.commandResult.textContent = `error ${error.message}`;
+      }
+    }
+
+    async function sendReport(event) {
+      event.preventDefault();
+      const body = {
+        id: "",
+        timestamp: 0,
+        zone: document.getElementById("reportZone").value,
+        kind: document.getElementById("reportKind").value,
+        description: document.getElementById("reportDescription").value,
+        lat: Number(document.getElementById("reportLat").value),
+        lon: Number(document.getElementById("reportLon").value),
+        status: "",
+      };
+      try {
+        const payload = await fetchJson("/api/reports", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        });
+        els.reportResult.textContent = `creado ${payload.data.id}`;
+      } catch (error) {
+        els.reportResult.textContent = `error ${error.message}`;
+      }
+    }
+
+    async function bootstrap() {
+      renderLayers();
+      await refreshHealth();
+      await Promise.all([refreshKpis(), refreshMap(), refreshAlerts()]);
+      connectEvents();
+      setInterval(refreshHealth, 8000);
+      setInterval(refreshKpis, 3000);
+      setInterval(refreshMap, 5000);
+      setInterval(refreshAlerts, 7000);
+      els.sessionStatus.textContent = state.token ? "session: cached" : "session: offline";
+    }
+
+    els.mapCanvas.addEventListener("mousemove", (event) => {
+      state.hovered = nearestHover(event);
+      renderHover();
+      drawMap();
+    });
+    els.mapCanvas.addEventListener("mouseleave", () => {
+      state.hovered = null;
+      renderHover();
+      drawMap();
+    });
+    document.getElementById("loginButton").addEventListener("click", login);
+    document.getElementById("commandForm").addEventListener("submit", sendCommand);
+    document.getElementById("reportForm").addEventListener("submit", sendReport);
+
+    bootstrap();
+  </script>
+</body>
+</html>

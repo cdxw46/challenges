@@ -1,0 +1,12 @@
+target/
+runtime/
+.env
+.DS_Store
+neurova
+*.db
+*.sqlite
+*.sqlite3
+*.pem
+*.key
+*.crt
+*.log
