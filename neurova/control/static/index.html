@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>NEUROVA Command Center</title>
+  <meta name="description" content="NEUROVA Command Center — urban OS for operators. La ciudad piensa." />
+  <meta name="theme-color" content="#090D12" />
+  <link rel="preconnect" href="/api" />
+  <link rel="stylesheet" href="/assets/neurova.css" />
+  <link rel="manifest" href="/control/app.webmanifest" />
+</head>
+<body class="nv-app">
+  <div id="loginOverlay" class="nv-overlay" hidden>
+    <form id="loginForm" class="nv-login">
+      <header>
+        <h1><span class="nv-logo">NEUROVA</span></h1>
+        <p class="nv-tagline">La ciudad piensa — Command Center</p>
+      </header>
+      <label>Email<input name="email" autocomplete="username" value="admin@neurova.city" required/></label>
+      <label>Password<input name="password" type="password" autocomplete="current-password" value="Neurova2025!" required/></label>
+      <label>Código 2FA (opcional)<input name="totp" autocomplete="one-time-code" placeholder="si el operador tiene TOTP activo"/></label>
+      <button type="submit">Entrar</button>
+      <p class="nv-hint">Demo: admin@neurova.city / Neurova2025!</p>
+    </form>
+  </div>
+
+  <aside class="nv-left">
+    <header class="nv-brand">
+      <span class="nv-logo" aria-hidden="true">◆</span>
+      <div>
+        <h1>NEUROVA</h1>
+        <p class="nv-tagline">Command Center</p>
+      </div>
+      <span class="nv-clock" id="clock"></span>
+    </header>
+
+    <section class="nv-kpis">
+      <h2>KPIs de ciudad</h2>
+      <div id="kpis" class="nv-kpi-grid"></div>
+    </section>
+
+    <nav class="nv-nav" aria-label="Módulos">
+      <button data-view="overview" class="active">Overview</button>
+      <button data-view="traffic">Tráfico</button>
+      <button data-view="energy">Energía</button>
+      <button data-view="water">Agua</button>
+      <button data-view="transit">Transporte</button>
+      <button data-view="env">Medioambiente</button>
+      <button data-view="security">Seguridad</button>
+      <button data-view="emergency">Emergencias</button>
+      <button data-view="rules">Reglas</button>
+      <button data-view="simulator">Simulador</button>
+      <button data-view="analytics">Analítica</button>
+      <button data-view="audit">Auditoría</button>
+      <button data-view="apps">Marketplace</button>
+    </nav>
+  </aside>
+
+  <main class="nv-main">
+    <section id="map-container" class="nv-map-container">
+      <canvas id="mapCanvas" aria-label="Mapa vectorial de la ciudad"></canvas>
+      <div class="nv-map-hud">
+        <div class="nv-map-legend" id="legend"></div>
+        <div class="nv-map-layers">
+          <label><input type="checkbox" checked data-layer="roads"/> Red viaria</label>
+          <label><input type="checkbox" checked data-layer="traffic"/> Tráfico</label>
+          <label><input type="checkbox" checked data-layer="env"/> Aire</label>
+          <label><input type="checkbox" checked data-layer="energy"/> Energía</label>
+          <label><input type="checkbox" checked data-layer="transit"/> Transporte</label>
+          <label><input type="checkbox" checked data-layer="water"/> Agua</label>
+          <label><input type="checkbox" checked data-layer="security"/> Seguridad</label>
+          <label><input type="checkbox" checked data-layer="waste"/> Residuos</label>
+          <label><input type="checkbox" data-layer="heatmap"/> Heatmap aire</label>
+          <label><input type="checkbox" data-layer="flow"/> Flujo tráfico</label>
+        </div>
+        <div class="nv-map-tools">
+          <button id="zoomIn" aria-label="Zoom +">+</button>
+          <button id="zoomOut" aria-label="Zoom -">−</button>
+          <button id="reset" aria-label="Reset">↺</button>
+          <button id="pauseBtn" aria-label="Pausa/Play">⏸</button>
+        </div>
+      </div>
+      <div id="mapPopup" class="nv-popup" hidden></div>
+    </section>
+
+    <section id="view-details" class="nv-view">
+      <div id="view-overview" class="nv-panel">
+        <h2>Panel de operaciones</h2>
+        <div class="nv-grid-3">
+          <div class="nv-card"><h3>Flujo de tráfico ciudad</h3><canvas id="spark-traffic" height="80"></canvas></div>
+          <div class="nv-card"><h3>Consumo energético</h3><canvas id="spark-energy" height="80"></canvas></div>
+          <div class="nv-card"><h3>Calidad del aire</h3><canvas id="spark-env" height="80"></canvas></div>
+          <div class="nv-card"><h3>Ruido ciudad</h3><canvas id="spark-noise" height="80"></canvas></div>
+          <div class="nv-card"><h3>Transporte público</h3><canvas id="spark-transit" height="80"></canvas></div>
+          <div class="nv-card"><h3>Agua</h3><canvas id="spark-water" height="80"></canvas></div>
+        </div>
+      </div>
+      <div id="view-traffic" class="nv-panel" hidden>
+        <h2>Módulo de tráfico</h2>
+        <div class="nv-split">
+          <div><canvas id="traffic-chart" height="160"></canvas></div>
+          <div>
+            <h3>Control manual de semáforos</h3>
+            <div id="trafficLights" class="nv-lights"></div>
+          </div>
+        </div>
+        <h3>Planificador de cortes</h3>
+        <p>Arrastra en el mapa para marcar una zona y recalcular rutas.</p>
+        <div id="closureList"></div>
+      </div>
+      <div id="view-energy" class="nv-panel" hidden>
+        <h2>Módulo de energía</h2>
+        <canvas id="energy-grid" height="260" aria-label="Grid energético"></canvas>
+        <div class="nv-grid-3">
+          <div class="nv-card"><h3>Carga</h3><strong id="loadKW"></strong> <span class="unit">kW</span></div>
+          <div class="nv-card"><h3>Solar</h3><strong id="solarKW"></strong> <span class="unit">kW</span></div>
+          <div class="nv-card"><h3>Renovables</h3><strong id="renewPct"></strong> <span class="unit">%</span></div>
+        </div>
+      </div>
+      <div id="view-water" class="nv-panel" hidden>
+        <h2>Módulo de agua</h2>
+        <canvas id="water-graph" height="260"></canvas>
+      </div>
+      <div id="view-transit" class="nv-panel" hidden>
+        <h2>Transporte público</h2>
+        <div id="transitList" class="nv-table"></div>
+      </div>
+      <div id="view-env" class="nv-panel" hidden>
+        <h2>Medioambiente</h2>
+        <div class="nv-grid-2">
+          <canvas id="env-chart" height="220"></canvas>
+          <div id="envInsights"></div>
+        </div>
+      </div>
+      <div id="view-security" class="nv-panel" hidden>
+        <h2>Seguridad</h2>
+        <div id="securityFeed"></div>
+      </div>
+      <div id="view-emergency" class="nv-panel" hidden>
+        <h2>Gestión de emergencias</h2>
+        <div id="emergencyList"></div>
+      </div>
+      <div id="view-rules" class="nv-panel" hidden>
+        <h2>Motor de reglas</h2>
+        <p>Edita la biblioteca de reglas con DSL propio:</p>
+        <textarea id="rulesEditor" rows="14" spellcheck="false"></textarea>
+        <button id="rulesSave">Probar en sandbox</button>
+        <pre id="rulesOut"></pre>
+        <h3>Reglas activas</h3>
+        <ul id="rulesList"></ul>
+      </div>
+      <div id="view-simulator" class="nv-panel" hidden>
+        <h2>Simulador de escenarios</h2>
+        <p>ABM propio que evalúa el impacto antes de ejecutar.</p>
+        <div class="nv-scenarios">
+          <button data-sc="match_day">Partido estadio</button>
+          <button data-sc="evacuation">Evacuación</button>
+          <button data-sc="blackout_north">Apagón norte</button>
+          <button data-sc="fire_market">Incendio mercado</button>
+          <button data-sc="heatwave">Ola de calor</button>
+          <button data-sc="rush_hour">Hora punta</button>
+        </div>
+        <pre id="scenarioOut"></pre>
+      </div>
+      <div id="view-analytics" class="nv-panel" hidden>
+        <h2>Analítica avanzada</h2>
+        <form id="queryBuilder">
+          <label>Serie <input name="series" value="traffic.flow_vph.Z00" /></label>
+          <label>Rango (min) <input name="minutes" type="number" min="1" max="1440" value="30"/></label>
+          <button>Consultar</button>
+        </form>
+        <canvas id="analyticsChart" height="220"></canvas>
+      </div>
+      <div id="view-audit" class="nv-panel" hidden>
+        <h2>Auditoría</h2>
+        <div id="auditTable"></div>
+      </div>
+      <div id="view-apps" class="nv-panel" hidden>
+        <h2>Marketplace de apps ciudadanas</h2>
+        <div id="apps" class="nv-grid-3"></div>
+      </div>
+    </section>
+  </main>
+
+  <aside class="nv-right">
+    <header><h2>Feed de eventos</h2><span id="connIndicator" class="nv-dot nv-dot-ok" title="WebSocket"></span></header>
+    <div class="nv-feed-filters">
+      <label><input type="checkbox" checked data-sev="critical"/> críticas</label>
+      <label><input type="checkbox" checked data-sev="high"/> altas</label>
+      <label><input type="checkbox" checked data-sev="medium"/> medias</label>
+      <label><input type="checkbox" checked data-sev="info"/> info</label>
+    </div>
+    <ul id="eventFeed" class="nv-feed" aria-live="polite"></ul>
+    <footer>
+      <span id="statsLine"></span>
+    </footer>
+  </aside>
+
+  <script type="module" src="/assets/app.js"></script>
+</body>
+</html>
