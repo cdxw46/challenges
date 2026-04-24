@@ -1,0 +1,40 @@
+version: "3.9"
+
+services:
+  neurova:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: neurova:dev
+    environment:
+      NEUROVA_RUNTIME_DIR: /data/runtime
+      NEUROVA_HTTP_PORT: 8080
+      NEUROVA_MQTT_PORT: 1883
+      NEUROVA_AMQP_PORT: 5672
+      NEUROVA_TCP_PORT: 9100
+      NEUROVA_UDP_PORT: 9101
+      RUST_LOG: info
+    ports:
+      - "8080:8080"
+      - "1883:1883"
+      - "5672:5672"
+      - "9100:9100"
+      - "9101:9101/udp"
+    volumes:
+      - neurova_data:/data/runtime
+    restart: unless-stopped
+
+  neurova-sim:
+    image: neurova:dev
+    depends_on:
+      - neurova
+    command: ["./target/release/neurova", "simulate", "--sensors", "5000"]
+    environment:
+      NEUROVA_RUNTIME_DIR: /data/runtime
+      RUST_LOG: info
+    volumes:
+      - neurova_data:/data/runtime
+    restart: unless-stopped
+
+volumes:
+  neurova_data:
