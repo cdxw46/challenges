@@ -26,8 +26,10 @@ NEUROVA is a production-oriented smart city operating system foundation built fr
   - HTTPS reverse proxy configuration for `/control`, `/ciudad`, and `/api`
 - `deploy/systemd`
   - Systemd unit for production deployment
-- `scripts`
-  - install, demo, and helper scripts
+- `install.sh`
+  - host installation script
+- `demo.sh`
+  - local demo launcher
 - `docker-compose.yml`
   - Development stack
 
@@ -109,7 +111,7 @@ Run locally:
 
 ## install.sh
 
-`scripts/install.sh` installs system packages, builds the binary, lays down directories, optionally installs systemd and Nginx assets, and can enable the service on a clean Ubuntu host.
+`install.sh` installs system packages, builds the binary, lays down directories, installs systemd and Nginx assets, and can enable the service on a clean Ubuntu host.
 
 Production-oriented runtime locations:
 
@@ -120,7 +122,7 @@ Production-oriented runtime locations:
 
 ## demo.sh
 
-`scripts/demo.sh` starts:
+`demo.sh` starts:
 
 - the Rust service
 - the synthetic city generator at configurable scale
@@ -231,8 +233,8 @@ This repository now provides a substantial, runnable NEUROVA foundation, but it 
 - `src/main.rs`
 - `web/control/index.html`
 - `web/ciudad/index.html`
-- `scripts/install.sh`
-- `scripts/demo.sh`
+- `install.sh`
+- `demo.sh`
 - `deploy/nginx/neurova.conf`
 - `deploy/systemd/neurova.service`
 - `docker-compose.yml`

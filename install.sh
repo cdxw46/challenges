@@ -5,8 +5,8 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 RUNTIME_DIR="${NEUROVA_RUNTIME_DIR:-/var/lib/neurova}"
 INSTALL_PREFIX="${NEUROVA_INSTALL_PREFIX:-/opt/neurova}"
 SYSTEMD_DIR="/etc/systemd/system"
-NGINX_SITE="/etc/nginx/sites-available/neurova"
-NGINX_ENABLED="/etc/nginx/sites-enabled/neurova"
+NGINX_SITE="/etc/nginx/sites-available/neurova.conf"
+NGINX_ENABLED="/etc/nginx/sites-enabled/neurova.conf"
 
 echo "[neurova] installing system packages"
 sudo apt-get update
@@ -31,10 +31,11 @@ cargo build --release
 
 echo "[neurova] preparing install directories"
 sudo mkdir -p "$INSTALL_PREFIX" "$RUNTIME_DIR"
-sudo cp -r web docs deploy scripts README.md Cargo.toml Cargo.lock src "$INSTALL_PREFIX"/
+sudo useradd --system --create-home --home-dir /var/lib/neurova --shell /usr/sbin/nologin neurova 2>/dev/null || true
+sudo cp -r web docs deploy README.md Cargo.toml Cargo.lock src demo.sh install.sh docker-compose.yml "$INSTALL_PREFIX"/
 sudo cp target/release/neurova "$INSTALL_PREFIX"/neurova
-sudo chown -R "$USER":"$USER" "$INSTALL_PREFIX"
-sudo chown -R "$USER":"$USER" "$RUNTIME_DIR"
+sudo chown -R neurova:neurova "$INSTALL_PREFIX"
+sudo chown -R neurova:neurova "$RUNTIME_DIR"
 
 echo "[neurova] configuring nginx"
 sudo mkdir -p /etc/nginx/ssl

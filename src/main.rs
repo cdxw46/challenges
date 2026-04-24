@@ -55,9 +55,21 @@ async fn run() -> Result<(), String> {
     let args: Vec<String> = std::env::args().collect();
     let mode = args.get(1).map(String::as_str).unwrap_or("serve");
     let config = Config::from_env();
+    let topology = CityTopology::default_city();
     fs::create_dir_all(config.runtime_dir.join("broker")).map_err(io_err)?;
     fs::create_dir_all(config.runtime_dir.join("tsdb")).map_err(io_err)?;
     fs::create_dir_all(config.runtime_dir.join("audit")).map_err(io_err)?;
+
+    if mode == "simulate" {
+        let count = args
+            .iter()
+            .position(|part| part == "--sensors")
+            .and_then(|idx| args.get(idx + 1))
+            .and_then(|value| value.parse::<usize>().ok())
+            .unwrap_or(1_500);
+        run_synthetic_sender(config.clone(), &topology, count).await?;
+        return Ok(());
+    }
 
     let db = Arc::new(ControlDb::new(&config.runtime_dir.join("neurova.db"))?);
     db.seed_defaults()?;
@@ -68,7 +80,7 @@ async fn run() -> Result<(), String> {
     )?);
     let tsdb = Arc::new(TimeSeriesDb::new(config.runtime_dir.join("tsdb")));
     let metrics = Arc::new(RuntimeMetrics::default());
-    let topology = Arc::new(CityTopology::default_city());
+    let topology = Arc::new(topology);
     let live_state = Arc::new(RwLock::new(LiveState::default()));
     let rules = Arc::new(RuleEngine::new(db.load_rules()?));
     let intelligence = Arc::new(IntelligenceEngine::default());
@@ -84,17 +96,6 @@ async fn run() -> Result<(), String> {
         rules,
         intelligence,
     };
-
-    if mode == "simulate" {
-        let count = args
-            .iter()
-            .position(|part| part == "--sensors")
-            .and_then(|idx| args.get(idx + 1))
-            .and_then(|value| value.parse::<usize>().ok())
-            .unwrap_or(1_500);
-        run_synthetic_generator(state, count).await?;
-        return Ok(());
-    }
 
     let scheduler = spawn_runtime_tasks(state.clone()).await;
     let listeners = spawn_protocol_listeners(state.clone()).await?;
@@ -1536,9 +1537,7 @@ impl SignalQAgent {
         let action = entry
             .iter()
             .enumerate()
-            .max_by(|(_, left), (_, right)| {
-                left.partial_cmp(right).unwrap_or(std::cmp::Ordering::Equal)
-            })
+            .max_by(|(_, left), (_, right)| left.total_cmp(right))
             .map(|(idx, _)| idx)
             .unwrap_or(0);
         entry[action] = entry[action] + 0.2 * (reward - entry[action]);
@@ -1643,9 +1642,7 @@ impl IncidentClassifier {
         let predicted = probs
             .iter()
             .enumerate()
-            .max_by(|(_, left), (_, right)| {
-                left.partial_cmp(right).unwrap_or(std::cmp::Ordering::Equal)
-            })
+            .max_by(|(_, left), (_, right)| left.total_cmp(right))
             .map(|(idx, _)| idx)
             .unwrap_or(0);
         self.labels.get(predicted).unwrap_or(&"monitor").to_string()
@@ -1668,7 +1665,10 @@ fn compute_route(zone: &str, bins: &[SensorFrame]) -> RoutePlan {
     for _ in 0..16 {
         let mut rng = rand::thread_rng();
         let mut order = names.clone();
-        order.sort_by_key(|_| rng.gen_range(0..10_000_u32));
+        for idx in (1..order.len()).rev() {
+            let swap_idx = rng.gen_range(0..=idx);
+            order.swap(idx, swap_idx);
+        }
         let score = order.len() as f64 * 0.38 + rng.gen_range(0.0..3.0)
             - pheromone.iter().sum::<f64>() * 0.01;
         if score < best_score {
@@ -2887,6 +2887,31 @@ async fn run_synthetic_generator(state: AppState, sensors: usize) -> Result<(), 
             for frame in generate_zone_frames(&zone, burst, tick, &state.topology) {
                 let transport = if tick % 4 == 0 { "udp" } else { "internal" };
                 let _ = process_frame(state.clone(), frame, transport).await?;
+            }
+        }
+        tokio::time::sleep(Duration::from_millis(800)).await;
+    }
+}
+
+async fn run_synthetic_sender(
+    config: Config,
+    topology: &CityTopology,
+    sensors: usize,
+) -> Result<(), String> {
+    info!(sensors, "starting synthetic city sender");
+    let socket = UdpSocket::bind(SocketAddr::from(([0, 0, 0, 0], 0)))
+        .await
+        .map_err(io_err)?;
+    let target = SocketAddr::from(([127, 0, 0, 1], config.udp_ingest_port));
+    let mut tick = 0_u64;
+    loop {
+        tick += 1;
+        for zone in zones() {
+            let zone_scale = sensors / zones().len();
+            let burst = zone_scale.clamp(1, 64);
+            for frame in generate_zone_frames(&zone, burst, tick, topology) {
+                let payload = serde_json::to_vec(&frame).map_err(|error| error.to_string())?;
+                socket.send_to(&payload, target).await.map_err(io_err)?;
             }
         }
         tokio::time::sleep(Duration::from_millis(800)).await;
