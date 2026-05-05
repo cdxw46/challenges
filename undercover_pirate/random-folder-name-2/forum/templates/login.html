@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Board the Ship - Pirate Chat{% endblock %}
+{% block nav %}<a href="/">Home</a>{% endblock %}
+{% block content %}
+  <div class="card">
+    <h2>Board the Ship</h2>
+    <form method="POST" action="/login">
+      <input type="text" id="username" name="username" placeholder="Pirate Name" required>
+      <input type="password" name="password" placeholder="Secret Code" required>
+      <label><input type="checkbox" id="remember"> Remember me name</label>
+      <button type="submit">Board!</button>
+    </form>
+    <div class="links"><a href="/register">No crew pass? Enlist here</a></div>
+  </div>
+  <script>
+    const stored = localStorage.getItem('username');
+    if (stored) {
+      document.getElementById('username').value = stored;
+      document.getElementById('remember').checked = true;
+    }
+    document.querySelector('form').addEventListener('submit', function() {
+      if (document.getElementById('remember').checked) {
+        localStorage.setItem('username', document.getElementById('username').value);
+      } else {
+        localStorage.removeItem('username');
+      }
+    });
+  </script>
+{% endblock %}

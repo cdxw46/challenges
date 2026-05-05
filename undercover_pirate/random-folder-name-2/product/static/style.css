@@ -1,0 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Pirata+One&family=IM+Fell+English:ital@0;1&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'IM Fell English', serif; background: #0d1b2a; color: #d4c4a0; }
+header { background: linear-gradient(180deg, #1b0c04 0%, #0d0604 100%); color: #d4a636; padding: 2rem 2rem; text-align: center; border-bottom: 4px solid #8b6914; position: relative; overflow: hidden; }
+header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(ellipse at center, rgba(212,166,54,0.1) 0%, transparent 70%); }
+header h1 { font-family: 'Pirata One', cursive; font-size: 3rem; letter-spacing: 3px; text-shadow: 3px 3px 6px rgba(0,0,0,0.8); position: relative; }
+header p { margin-top: 0.5rem; font-size: 1.1rem; opacity: 0.8; font-style: italic; position: relative; }
+.container { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; }
+.section { margin-bottom: 2rem; }
+.card { background: linear-gradient(135deg, #1a2a3a 0%, #0f1f2f 100%); border: 1px solid #2a4a6a; border-radius: 8px; padding: 1.5rem; box-shadow: 0 4px 16px rgba(0,0,0,0.4); }
+.feature-card { display: flex; gap: 1.5rem; align-items: flex-start; }
+.feature-img { width: 280px; border-radius: 6px; flex-shrink: 0; border: 2px solid #2a4a6a; }
+.feature-text { flex: 1; }
+.card h3 { font-family: 'Pirata One', cursive; color: #d4a636; margin-bottom: 0.75rem; font-size: 1.5rem; }
+.card p { color: #8a9aaa; font-size: 0.95rem; line-height: 1.6; }
+@media (max-width: 700px) { .feature-card { flex-direction: column; } .feature-img { width: 100%; } }
+.forum-banner { background: linear-gradient(135deg, #2d1810 0%, #1a0a04 100%); border: 2px solid #8b6914; border-radius: 8px; padding: 2rem; text-align: center; margin-top: 2rem; }
+.forum-banner h2 { font-family: 'Pirata One', cursive; color: #d4a636; margin-bottom: 0.5rem; font-size: 1.8rem; }
+.forum-banner p { color: #b0a080; }
+.forum-banner a { display: inline-block; margin-top: 1rem; background: linear-gradient(180deg, #8b6914 0%, #6b4f0e 100%); color: white; padding: 0.75rem 2rem; border-radius: 6px; text-decoration: none; font-family: 'Pirata One', cursive; font-size: 1.1rem; letter-spacing: 1px; border: 1px solid #a07818; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
+.forum-banner a:hover { background: linear-gradient(180deg, #a07818 0%, #8b6914 100%); }
+footer { text-align: center; padding: 2rem; color: #5a6a7a; font-size: 0.85rem; border-top: 1px solid #1a2a3a; }

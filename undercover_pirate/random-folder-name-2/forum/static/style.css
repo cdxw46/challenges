@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Pirata+One&family=IM+Fell+English:ital@0;1&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'IM Fell English', serif; background: #1a0f07 url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><rect fill="%231a0f07"/><circle cx="50" cy="50" r="1" fill="%232a1f12" opacity="0.5"/><circle cx="150" cy="120" r="1" fill="%232a1f12" opacity="0.4"/></svg>'); color: #d4c4a0; }
+.header { background: linear-gradient(180deg, #2d1810 0%, #1a0a04 100%); color: #d4a636; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #8b6914; }
+.header h1 { font-family: 'Pirata One', cursive; font-size: 1.8rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.7); }
+.header a { color: #d4a636; text-decoration: none; margin-left: 1rem; }
+.header a:hover { color: #f0d060; }
+.container { max-width: 800px; margin: 2rem auto; padding: 0 1rem; }
+.card { background: linear-gradient(135deg, #2d1f12 0%, #3a2815 100%); border: 1px solid #5a4020; border-radius: 4px; padding: 1.5rem; margin-bottom: 1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
+.post-meta { color: #8a7a5a; font-size: 0.85rem; margin-bottom: 0.5rem; }
+.post-meta a { color: #d4a636; }
+.post-meta a:hover { color: #f0d060; }
+input, textarea { width: 100%; padding: 0.6rem; margin: 0.5rem 0; border: 1px solid #5a4020; border-radius: 4px; font-size: 1rem; background: #1a0f07; color: #d4c4a0; font-family: 'IM Fell English', serif; }
+input::placeholder, textarea::placeholder { color: #6a5a3a; }
+textarea { min-height: 80px; resize: vertical; }
+button, .btn { background: linear-gradient(180deg, #8b6914 0%, #6b4f0e 100%); color: #fff; border: 1px solid #a07818; padding: 0.7rem 1.5rem; border-radius: 4px; cursor: pointer; font-size: 1rem; text-decoration: none; display: inline-block; font-family: 'Pirata One', cursive; letter-spacing: 1px; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
+button:hover, .btn:hover { background: linear-gradient(180deg, #a07818 0%, #8b6914 100%); }
+.links { margin: 1rem 0; }
+.links a { color: #d4a636; margin-right: 1rem; }
+.links a:hover { color: #f0d060; }
+h2, h3 { font-family: 'Pirata One', cursive; color: #d4a636; }
+label { color: #8a7a5a; }
+.post-card { display: flex; gap: 1rem; align-items: flex-start; }
+.pfp { width: 48px; height: 48px; border-radius: 50%; border: 2px solid #8b6914; flex-shrink: 0; object-fit: cover; }
+.post-body { flex: 1; min-width: 0; }
+.delete-btn { background: linear-gradient(180deg, #8b2014 0%, #6b1a0e 100%); border-color: #a03018; padding: 0.3rem 0.8rem; font-size: 0.8rem; }

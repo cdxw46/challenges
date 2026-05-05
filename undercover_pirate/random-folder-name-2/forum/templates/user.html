@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}{{ target }}'s Log - Pirate Chat{% endblock %}
+{% block nav %}
+  {% if current_user %}
+    <span>Logged in as <b>{{ current_user }}</b></span>
+    <a href="/logout">Logout</a>
+  {% else %}
+    <a href="/login">Login</a> <a href="/register">Register</a>
+  {% endif %}
+{% endblock %}
+{% block content %}
+  <h2 style="margin-bottom:1rem;">{{ target }}'s Captain's Log</h2>
+  {% if posts %}
+    {% for p in posts %}
+      <div class="card post-card">
+        <img class="pfp" src="https://i1.sndcdn.com/artworks-4lM38D2O0Rk9vJmL-jYFqLA-t1080x1080.jpg" alt="pirate">
+        <div class="post-body">
+          <div class="post-meta">{{ p.timestamp }}</div>
+          <div class="post-content">{{ p.content | safe }}</div>
+          {% if current_user == p.author %}
+            <form method="POST" action="/delete-post" style="margin-top:0.5rem;">
+              <input type="hidden" name="timestamp" value="{{ p.timestamp }}">
+              <button type="submit" class="delete-btn">Delete</button>
+            </form>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <div class="card"><p>No messages from {{ target }}. Silent seas...</p></div>
+  {% endif %}
+{% endblock %}

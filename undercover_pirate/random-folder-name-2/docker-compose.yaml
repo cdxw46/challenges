@@ -1,0 +1,75 @@
+services:
+  proxy:
+    build:
+      context: ./proxy
+      args:
+        HOST: ${HOST}
+    ports:
+      - "${PORT}:443"
+    networks:
+      piratenet:
+        ipv4_address: ${PIRATENET}.30
+      external:
+    depends_on:
+      - product
+      - forum
+      - captain
+
+  dns:
+    build: ./dns
+    environment:
+      HOST: ${HOST}
+      PIRATENET: ${PIRATENET}
+      VAULTNET: ${VAULTNET}
+    networks:
+      external:
+      piratenet:
+        ipv4_address: ${PIRATENET}.100
+    depends_on:
+      - proxy
+
+  captain:
+    build: ./captain
+    environment:
+      HOST: ${HOST}
+    networks:
+      piratenet:
+      vault:
+        ipv4_address: ${VAULTNET}.2
+    dns:
+      - ${PIRATENET}.100
+
+  vault:
+    build: ./vault
+    networks:
+      vault:
+        ipv4_address: ${VAULTNET}.3
+
+  product:
+    build: ./product
+    environment:
+      HOST: ${HOST}
+    networks:
+      piratenet:
+
+  forum:
+    build: ./forum
+    environment:
+      HOST: ${HOST}
+    networks:
+      piratenet:
+
+networks:
+  vault:
+    internal: true
+    ipam:
+      config:
+        - subnet: ${VAULTNET}.0/24
+  piratenet:
+    internal: true
+    ipam:
+      config:
+        - subnet: ${PIRATENET}.0/24
+  external:
+    name: external
+

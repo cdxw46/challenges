@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Join the Crew - Pirate Chat{% endblock %}
+{% block nav %}<a href="/">Home</a>{% endblock %}
+{% block content %}
+  <div class="card">
+    <h2>Join the Crew</h2>
+    <form method="POST" action="/register">
+      <input type="text" name="username" placeholder="Choose yer pirate name" required>
+      <input type="password" name="password" placeholder="Choose a secret code" required>
+      <button type="submit">Enlist!</button>
+    </form>
+    <div class="links"><a href="/login">Already got a crew pass? Board here</a></div>
+  </div>
+{% endblock %}
