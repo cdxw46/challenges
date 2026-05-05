@@ -1,0 +1,13 @@
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    volumes:
+      - smurfx_data:/app/prisma
+    restart: unless-stopped
+
+volumes:
+  smurfx_data:

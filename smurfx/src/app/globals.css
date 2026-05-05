@@ -1,0 +1,94 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-display: "InterDisplay", "Helvetica Neue", system-ui, sans-serif;
+  --font-sans: "Inter", "Helvetica Neue", system-ui, sans-serif;
+  --bg: #ffffff;
+  --fg: #0a0a0a;
+  --muted: #6b6b75;
+  --line: #e5e5ea;
+  --brand: #534ab7;
+  --brand-soft: #cecbf6;
+}
+
+.dark {
+  --bg: #0a0a0a;
+  --fg: #f6f6f7;
+  --muted: #9b9ba6;
+  --line: #1f1f24;
+  --brand: #6b62d8;
+  --brand-soft: #2e2978;
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html,
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+}
+
+::selection {
+  background: var(--brand);
+  color: #fff;
+}
+
+@layer components {
+  .container-x {
+    @apply mx-auto w-full max-w-[1480px] px-4 sm:px-6 lg:px-10;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-full bg-smurf-500 px-6 py-3 font-semibold uppercase tracking-wide text-white transition hover:bg-smurf-600 active:scale-[0.98];
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-full border border-ink/15 bg-transparent px-6 py-3 font-semibold uppercase tracking-wide text-ink transition hover:bg-ink hover:text-white active:scale-[0.98];
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-medium text-ink/80 transition hover:bg-ink/5;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-full border border-ink/10 bg-white/70 px-3 py-1 text-xs font-medium text-ink/80;
+  }
+
+  .card-hover {
+    @apply transition duration-300 hover:-translate-y-1 hover:shadow-xl;
+  }
+
+  .input-base {
+    @apply w-full rounded-md border border-ink/15 bg-white px-4 py-3 text-sm outline-none transition focus:border-smurf-500 focus:ring-2 focus:ring-smurf-500/20;
+  }
+
+  .label-base {
+    @apply mb-1 block text-xs font-semibold uppercase tracking-wider text-ink/70;
+  }
+
+  .h-display {
+    font-family: var(--font-display);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 0.95;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, #eee 0%, #f6f6f6 50%, #eee 100%);
+  background-size: 200% 100%;
+}
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }
+
+.product-card .img-secondary { opacity: 0; transition: opacity 0.4s ease; }
+.product-card:hover .img-secondary { opacity: 1; }
+.product-card:hover .img-primary { opacity: 0; }
+.product-card .img-primary { transition: opacity 0.4s ease; }
