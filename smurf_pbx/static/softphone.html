@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMURF PBX WebRTC Softphone</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #2c3e50; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .phone { background: #34495e; padding: 2rem; border-radius: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.5); width: 300px; text-align: center; }
+        input[type="text"] { width: 100%; padding: 10px; margin: 10px 0; border: none; border-radius: 5px; box-sizing: border-box; }
+        button { background: #27ae60; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; width: 100%; font-size: 16px; margin-top: 10px; }
+        button.hangup { background: #c0392b; }
+        #status { margin-top: 15px; font-size: 14px; color: #bdc3c7; }
+        .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
+        .keypad button { background: #7f8c8d; padding: 15px; font-size: 20px; }
+    </style>
+</head>
+<body>
+    <div class="phone">
+        <h2>SMURF Softphone</h2>
+        <input type="text" id="extension" placeholder="Your Extension (e.g. 100)" />
+        <input type="text" id="password" placeholder="Password" type="password" />
+        <button id="btn-register" onclick="register()">Register</button>
+        
+        <hr style="border-color: #7f8c8d; margin: 20px 0;">
+        
+        <input type="text" id="target" placeholder="Number to Dial" />
+        <button id="btn-call" onclick="call()">Call</button>
+        <button id="btn-hangup" class="hangup" onclick="hangup()" style="display:none;">Hangup</button>
+        
+        <div class="keypad">
+            <button onclick="appendNum('1')">1</button>
+            <button onclick="appendNum('2')">2</button>
+            <button onclick="appendNum('3')">3</button>
+            <button onclick="appendNum('4')">4</button>
+            <button onclick="appendNum('5')">5</button>
+            <button onclick="appendNum('6')">6</button>
+            <button onclick="appendNum('7')">7</button>
+            <button onclick="appendNum('8')">8</button>
+            <button onclick="appendNum('9')">9</button>
+            <button onclick="appendNum('*')">*</button>
+            <button onclick="appendNum('0')">0</button>
+            <button onclick="appendNum('#')">#</button>
+        </div>
+        
+        <div id="status">Disconnected</div>
+        <audio id="remoteAudio" autoplay></audio>
+    </div>
+
+    <script>
+        let ws;
+        let pc;
+        let localStream;
+        
+        function appendNum(num) {
+            document.getElementById('target').value += num;
+        }
+
+        function register() {
+            const ext = document.getElementById('extension').value;
+            const pwd = document.getElementById('password').value;
+            
+            // Connect to SMURF WebSocket Signaling Server
+            ws = new WebSocket(`wss://${window.location.host}/ws`);
+            
+            ws.onopen = () => {
+                document.getElementById('status').innerText = "Connected. Registering...";
+                ws.send(JSON.stringify({ type: 'register', ext: ext, password: pwd }));
+            };
+            
+            ws.onmessage = async (event) => {
+                const msg = JSON.parse(event.data);
+                if (msg.type === 'registered') {
+                    document.getElementById('status').innerText = `Registered as ${ext}`;
+                    document.getElementById('status').style.color = '#2ecc71';
+                } else if (msg.type === 'incoming_call') {
+                    document.getElementById('status').innerText = `Incoming call from ${msg.caller}`;
+                    answer(msg.sdp);
+                } else if (msg.type === 'answer') {
+                    await pc.setRemoteDescription(new RTCSessionDescription({ type: 'answer', sdp: msg.sdp }));
+                    document.getElementById('status').innerText = "In Call";
+                }
+            };
+        }
+
+        async function call() {
+            const target = document.getElementById('target').value;
+            document.getElementById('status').innerText = `Calling ${target}...`;
+            
+            pc = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
+            
+            pc.ontrack = (event) => {
+                document.getElementById('remoteAudio').srcObject = event.streams[0];
+            };
+            
+            localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            localStream.getTracks().forEach(track => pc.addTrack(track, localStream));
+            
+            const offer = await pc.createOffer();
+            await pc.setLocalDescription(offer);
+            
+            ws.send(JSON.stringify({ type: 'invite', target: target, sdp: offer.sdp }));
+            
+            document.getElementById('btn-call').style.display = 'none';
+            document.getElementById('btn-hangup').style.display = 'block';
+        }
+
+        async function answer(remoteSdp) {
+            pc = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
+            
+            pc.ontrack = (event) => {
+                document.getElementById('remoteAudio').srcObject = event.streams[0];
+            };
+            
+            localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            localStream.getTracks().forEach(track => pc.addTrack(track, localStream));
+            
+            await pc.setRemoteDescription(new RTCSessionDescription({ type: 'offer', sdp: remoteSdp }));
+            const answer = await pc.createAnswer();
+            await pc.setLocalDescription(answer);
+            
+            ws.send(JSON.stringify({ type: 'answer', sdp: answer.sdp }));
+            
+            document.getElementById('btn-call').style.display = 'none';
+            document.getElementById('btn-hangup').style.display = 'block';
+            document.getElementById('status').innerText = "In Call";
+        }
+
+        function hangup() {
+            if (pc) pc.close();
+            if (localStream) localStream.getTracks().forEach(track => track.stop());
+            ws.send(JSON.stringify({ type: 'bye' }));
+            
+            document.getElementById('btn-call').style.display = 'block';
+            document.getElementById('btn-hangup').style.display = 'none';
+            document.getElementById('status').innerText = "Registered";
+        }
+    </script>
+</body>
+</html>

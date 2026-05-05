@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMURF PBX Admin Panel</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f4f4f9; }
+        header { background: #0056b3; color: white; padding: 1rem; text-align: center; }
+        .container { max-width: 1000px; margin: 2rem auto; padding: 1rem; background: white; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+        th, td { padding: 0.75rem; border-bottom: 1px solid #ddd; text-align: left; }
+        th { background: #f8f9fa; }
+        .status-online { color: green; font-weight: bold; }
+        .status-offline { color: red; font-weight: bold; }
+        .nav { margin-bottom: 20px; }
+        .nav a { margin-right: 15px; text-decoration: none; color: #0056b3; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>SMURF PBX</h1>
+        <p>Enterprise Communications Platform</p>
+    </header>
+    <div class="container">
+        <div class="nav">
+            <a href="#" onclick="showTab('dashboard')">Dashboard</a>
+            <a href="#" onclick="showTab('extensions')">Extensions</a>
+            <a href="#" onclick="showTab('cdr')">Call History (CDR)</a>
+            <a href="/softphone" target="_blank">Open WebRTC Softphone ↗</a>
+        </div>
+        
+        <div id="dashboard" class="tab">
+            <h2>Dashboard</h2>
+            <p id="system-status">Loading status...</p>
+            <p id="active-calls">Active Calls: 0</p>
+            <p id="online-ext">Online Extensions: 0</p>
+        </div>
+        
+        <div id="extensions" class="tab" style="display:none;">
+            <h2>Extensions</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Extension</th>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th>IP Address</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="extensions-list">
+                    <tr><td colspan="5">Loading...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="cdr" class="tab" style="display:none;">
+            <h2>Call History (CDR)</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Caller</th>
+                        <th>Callee</th>
+                        <th>Start Time</th>
+                        <th>Duration (s)</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="cdr-list">
+                    <tr><td colspan="6">Loading...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabId) {
+            document.querySelectorAll('.tab').forEach(el => el.style.display = 'none');
+            document.getElementById(tabId).style.display = 'block';
+            if (tabId === 'dashboard') loadStatus();
+            if (tabId === 'extensions') loadExtensions();
+            if (tabId === 'cdr') loadCDR();
+        }
+
+        function loadStatus() {
+            fetch('/api/status')
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('system-status').innerText = `System Status: ${data.status.toUpperCase()} | Version: ${data.version}`;
+                    document.getElementById('active-calls').innerText = `Active Calls: ${data.active_calls}`;
+                    document.getElementById('online-ext').innerText = `Online Extensions: ${data.online_extensions}`;
+                });
+        }
+
+        function loadExtensions() {
+            fetch('/api/extensions')
+                .then(res => res.json())
+                .then(data => {
+                    const tbody = document.getElementById('extensions-list');
+                    tbody.innerHTML = '';
+                    data.extensions.forEach(ext => {
+                        tbody.innerHTML += `
+                            <tr>
+                                <td>${ext.ext}</td>
+                                <td>${ext.name}</td>
+                                <td class="status-${ext.status}">${ext.status.toUpperCase()}</td>
+                                <td>${ext.ip || 'N/A'}</td>
+                                <td><button>Edit</button> <button>Delete</button></td>
+                            </tr>
+                        `;
+                    });
+                });
+        }
+
+        function loadCDR() {
+            fetch('/api/cdr')
+                .then(res => res.json())
+                .then(data => {
+                    const tbody = document.getElementById('cdr-list');
+                    tbody.innerHTML = '';
+                    data.cdr.forEach(record => {
+                        tbody.innerHTML += `
+                            <tr>
+                                <td>${record.id}</td>
+                                <td>${record.caller}</td>
+                                <td>${record.callee}</td>
+                                <td>${record.start_time}</td>
+                                <td>${record.duration || 0}</td>
+                                <td>${record.status}</td>
+                            </tr>
+                        `;
+                    });
+                });
+        }
+
+        // Initial load
+        loadStatus();
+        setInterval(loadStatus, 5000);
+    </script>
+</body>
+</html>
