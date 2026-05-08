@@ -1,12 +1,12 @@
 {
   "version": 2,
-  "name": "ing-online-secure",
+  "name": "app-service-gateway-v1",
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
     {
       "source": "/",
-      "destination": "/ing-login.html"
+      "destination": "/index.html"
     }
   ],
   "headers": [
